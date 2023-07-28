@@ -1,1 +1,5 @@
 Pranathi's file
+-Working on gesture based zooming application
+-Learning pixel enlargement for zoom functionality
+-learning and exploring modules to create ar filters
+
