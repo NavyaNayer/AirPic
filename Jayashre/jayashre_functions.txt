@@ -3,8 +3,12 @@ Jayashre's file
 Learning Kotlin File
 Learning OpenGL Es for creating overall filter
 
-Going to build a basic camera app to implement OpenGL ES
+Implementation of OpenGL ES
 
 Have to work on zooming feature on our app
 
 Have to work on training a model on swiping the overall filters from a far distance
+
+
+Completed Tasks:
+- Built a basic camera app
