@@ -26,6 +26,7 @@ class MainActivity : ComponentActivity() {
 
         splashScreen.setKeepOnScreenCondition { viewModel.isLoading.value }
 
+
         setContent {
             AirPicTheme {
                 Surface(
