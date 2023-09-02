@@ -87,7 +87,7 @@ fun NoPermissionContent(
         Spacer(modifier = Modifier.height(16.dp)) // Add spacing between "Allow your camera" text and the main text
 
         Box(
-            modifier = Modifier.offset( y = (-1.dp))
+            modifier = Modifier.offset( y = (10.dp))
         ){
             Text(
                 text = "We will need your camera to give you better experience",
