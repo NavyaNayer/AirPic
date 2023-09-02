@@ -3,13 +3,14 @@ Jayashre's file
 Learning Kotlin File
 Learning OpenGL Es for creating overall filter
 
-To Build mainframe as a camera frame
 
 To Build nav bar and bottom bar
 
 To Build four buttons on nav bar 
 
 To build three buttons on bottom bar
+
+Creation of Filters
 
 Implementation of OpenGL ES
 
@@ -22,3 +23,5 @@ Completed Tasks:
 - Built a basic camera app (for practice purposes)
 - Built the Logo for app
 - Built the Splash Screen using SplashScreen API
+- Built the Camera Permission Screen
+- Built Mainframe as the Camera Frame
