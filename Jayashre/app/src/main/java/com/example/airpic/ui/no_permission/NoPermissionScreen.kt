@@ -57,23 +57,23 @@ fun NoPermissionContent(
     ) {
         Box(
             modifier = Modifier
-                .size(180.dp) // Increase the icon size as needed
+                .size(180.dp)
                 .offset(x = 0.dp, y = (-80.dp))
         ) {
             Image(
-                painter = painterResource(id = R.mipmap.ic_no_permission_icon), // Replace with your actual icon resource ID
-                contentDescription = null, // Set appropriate content description
+                painter = painterResource(id = R.mipmap.ic_no_permission_icon),
+                contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxSize()
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp)) // Add spacing between icon and "Allow your camera" text
+        Spacer(modifier = Modifier.height(8.dp))
 
         Box(
             modifier = Modifier
-                .offset(y = (-35.dp)) // Specify the Y coordinate here to adjust the vertical position
+                .offset(y = (-35.dp))
         ) {
             Text(
                 text = "Allow your camera",
@@ -84,7 +84,7 @@ fun NoPermissionContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp)) // Add spacing between "Allow your camera" text and the main text
+        Spacer(modifier = Modifier.height(16.dp))
 
         Box(
             modifier = Modifier.offset( y = (10.dp))
@@ -95,7 +95,7 @@ fun NoPermissionContent(
                 fontSize = 17.sp,
                 fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center // Center-align the text
+                textAlign = TextAlign.Center
             )
             }
 
