@@ -8,7 +8,7 @@ To Build nav bar and bottom bar
 
 To Build four buttons on nav bar 
 
-To build three buttons on bottom bar
+To give functions to those bottom button
 
 Creation of Filters
 
@@ -25,3 +25,5 @@ Completed Tasks:
 - Built the Splash Screen using SplashScreen API
 - Built the Camera Permission Screen
 - Built Mainframe as the Camera Frame
+- Built Three Buttons with a box background at bottom
+- Pinch Zooming is Working
