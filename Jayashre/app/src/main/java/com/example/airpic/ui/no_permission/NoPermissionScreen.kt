@@ -97,12 +97,12 @@ fun NoPermissionContent(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
-            }
+        }
 
 
 
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp)) // Add spacing between text and the button
 
         Box(
             modifier = Modifier.offset(y = 60.dp)
@@ -131,10 +131,10 @@ fun NoPermissionContent(
 
 @Composable
 fun IconWithText(
-    iconResourceId: Int,
+    iconResourceId: Int, // Resource ID of the XML-based icon
     text: String,
     modifier: Modifier = Modifier,
-    iconSize: Dp = 48.dp,
+    iconSize: Dp = 48.dp, // Adjust the icon size as needed
     textColor: Color = Color.Black,
     fontSize: TextUnit = 16.sp,
     fontFamily: FontFamily = FontFamily.SansSerif,
@@ -146,10 +146,10 @@ fun IconWithText(
     ) {
         Image(
             painter = painterResource(id = iconResourceId),
-            contentDescription = null,
+            contentDescription = null, // Set appropriate content description
             modifier = Modifier.size(iconSize)
         )
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(8.dp)) // Add spacing between icon and text
         Text(
             text = text,
             color = textColor,
