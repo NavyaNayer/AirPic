@@ -5,20 +5,18 @@ package com.example.airpic.ui.camera
 import android.util.Log
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
-import androidx.camera.view.LifecycleCameraController
+import androidx.camera.core.CameraSelector
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlipCameraAndroid
 import androidx.compose.material.icons.filled.PhotoLibrary
@@ -33,7 +31,11 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.common.util.concurrent.ListenableFuture
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 @Composable
 fun CameraScreen (
@@ -48,25 +50,14 @@ private fun CameraContent() {
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val cameraController = remember { LifecycleCameraController(context) }
+    val cameraProviderFuture: ListenableFuture<ProcessCameraProvider> = remember { ProcessCameraProvider.getInstance(context) }
+    val executor = remember { Executors.newSingleThreadExecutor() }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize()
-
-    ) { paddingValues: PaddingValues ->
-        AndroidView(
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
-            factory = { context ->
-                PreviewView(context).apply {
-                    layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-                    setBackgroundColor(android.graphics.Color.BLACK)
-                    scaleType = PreviewView.ScaleType.FILL_START
-                }.also { previewView ->
-                    previewView.controller = cameraController
-                    cameraController.bindToLifecycle(lifecycleOwner)
-                }
-            })
-    }
+    CameraPreview(
+        cameraProviderFuture = cameraProviderFuture,
+        lifecycleOwner = lifecycleOwner,
+        executor = executor
+    )
     val translucentBlack = Color(0x80f5f5f5)
 
     val galleryButtonModifier = Modifier
@@ -80,6 +71,8 @@ private fun CameraContent() {
     val flipCameraButtonModifier = Modifier
         .size(with(LocalDensity.current) { 70.dp })
         .offset(x = (300.dp), y = 75.dp)
+
+
 
 
     Box(
@@ -119,7 +112,7 @@ private fun CameraContent() {
 
         FloatingActionButton(
             onClick = {
-                Log.d("CameraScreen", "Flip camera button clicked")
+                Log.d("CameraScreen", "Flip button clicked")
             },
             modifier = flipCameraButtonModifier,
             backgroundColor = androidx.compose.ui.graphics.Color(0xFF330066),
@@ -134,6 +127,36 @@ private fun CameraContent() {
     }
 }
 }
+
+@Composable
+fun CameraPreview(cameraProviderFuture: ListenableFuture<ProcessCameraProvider>, lifecycleOwner: LifecycleOwner, executor: ExecutorService?)
+{
+    AndroidView(
+        modifier = Modifier.fillMaxSize(),
+        factory = { context ->
+            val previewView = PreviewView(context)
+            previewView.layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+            previewView.setBackgroundColor(android.graphics.Color.BLACK)
+            previewView.scaleType = PreviewView.ScaleType.FILL_START
+            previewView
+        },
+        update = { view ->
+            val cameraProvider = cameraProviderFuture.get()
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+            val preview = androidx.camera.core.Preview.Builder().build()
+            preview.setSurfaceProvider(view.surfaceProvider)
+
+            try {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview)
+            } catch (exception: Exception) {
+                // Handle exceptions here
+            }
+        }
+    )
+}
+
 
 @Preview
 @Composable
