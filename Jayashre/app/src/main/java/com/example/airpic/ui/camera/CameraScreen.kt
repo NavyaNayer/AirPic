@@ -2,10 +2,19 @@ package com.example.airpic.ui.camera
 
 
 
+import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.icu.text.SimpleDateFormat
+import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.view.CameraController.IMAGE_ANALYSIS
+import androidx.camera.view.CameraController.IMAGE_CAPTURE
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
@@ -34,7 +43,9 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import java.util.Locale
 
 @Composable
 fun CameraScreen (
@@ -47,12 +58,13 @@ fun CameraScreen (
 @Composable
 private fun CameraContent() {
 
-
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val contentResolver = LocalContext.current.contentResolver
     val cameraController = remember { LifecycleCameraController(context) }
+    cameraController.setEnabledUseCases(IMAGE_CAPTURE)
+    cameraController.setEnabledUseCases(IMAGE_ANALYSIS)
     cameraController.cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -71,7 +83,6 @@ private fun CameraContent() {
                 }
             })
     }
-    val translucentBlack = Color(0x80f5f5f5)
 
     val galleryButtonModifier = Modifier
         .size(with(LocalDensity.current) { 70.dp })
@@ -93,6 +104,36 @@ private fun CameraContent() {
     }
     }
 
+    fun takePhoto() {
+        val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.UK)
+            .format(System.currentTimeMillis())
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/AirPic")
+            }
+        }
+        val outputOptions = ImageCapture.OutputFileOptions
+            .Builder(contentResolver,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValues)
+            .build()
+        cameraController.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(context),
+            object: ImageCapture.OnImageSavedCallback {
+                override fun onError(exc: ImageCaptureException) {
+                    Log.e(TAG, "Photo capture failed: ${exc.message}",exc)
+                }
+
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    val msg = "Photo captured: ${output.savedUri}"
+                    Log.d(TAG,msg)
+                }
+            }
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -103,7 +144,7 @@ private fun CameraContent() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(215.dp)
-                .background(translucentBlack)
+                .background(Color.Transparent)
         ){FloatingActionButton(
             onClick = {
                 Log.d("CameraScreen", "Gallery button clicked")
@@ -120,7 +161,7 @@ private fun CameraContent() {
         }
             FloatingActionButton(
                 onClick = {
-                    Log.d("CameraScreen", "Shutter button clicked")
+                    takePhoto()
                 },
                 modifier = shutterButtonModifier,
                 backgroundColor = androidx.compose.ui.graphics.Color.White,
@@ -132,7 +173,6 @@ private fun CameraContent() {
             FloatingActionButton(
                 onClick = {
                     toggleCamera()
-                    Log.d("CameraScreen", "Flip camera button clicked")
                 },
                 modifier = flipCameraButtonModifier,
                 backgroundColor = androidx.compose.ui.graphics.Color(0xFF330066),
