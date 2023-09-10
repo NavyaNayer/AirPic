@@ -151,7 +151,7 @@ private fun CameraContent() {
         modifier = Modifier
             .fillMaxSize(),
         contentAlignment = Alignment.BottomEnd
-    ) {Button(
+    ) { Button(
         onClick = { cameraMode = CameraMode.PHOTO
             Log.d("CameraScreen", "Photo button clicked") },
         modifier = Modifier
@@ -182,8 +182,8 @@ private fun CameraContent() {
         Box (
             modifier = Modifier
                 .fillMaxWidth()
-                .height(215.dp)
-                .background(Color.Transparent)
+                .height(190.dp)
+                .background(Color(0x80f5f5f5))
         ){
             FloatingActionButton(
             onClick = {
@@ -227,6 +227,88 @@ private fun CameraContent() {
                     imageVector = Icons.Default.FlipCameraAndroid,
                     contentDescription = null,
                     modifier = Modifier.size(35.dp)
+                )
+            }
+        }
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.TopEnd
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)
+                .background(Color(0x80f5f5f5))
+
+        ) {
+            Button(
+                onClick = {
+                    Log.d("CameraScreen", "Settings button clicked")
+                },
+                modifier = Modifier
+                    .background(Color.Transparent)
+                    .offset(x = -(5.dp), y = 5.dp)
+                    .size(with(LocalDensity.current) { 100.dp }),
+                colors = ButtonDefaults.buttonColors(Color.Transparent)
+
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_settings),
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp),
+                )
+            }
+
+            Button(
+                onClick = {
+                    Log.d("Camera Screen", "Flash OFF Button Clicked")
+                },
+                modifier = Modifier
+                    .background(Color.Transparent)
+                    .offset(x = 101.dp, y = 5.dp)
+                    .size(with(LocalDensity.current) { 100.dp }),
+                colors = ButtonDefaults.buttonColors(Color.Transparent)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_flash_off_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp)
+                )
+            }
+
+            Button(
+                onClick = {
+                    Log.d("Camera Screen", "Timer Button Clicked")
+                },
+                modifier = Modifier
+                    .background(Color.Transparent)
+                    .offset(x = 207.dp, y = 5.dp)
+                    .size(with(LocalDensity.current) { 100.dp }),
+                colors = ButtonDefaults.buttonColors(Color.Transparent)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_timer),
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp)
+                )
+            }
+
+            Button(
+                onClick = {
+                    Log.d("Camera Screen", "Gesture Button Clicked")
+                },
+                modifier = Modifier
+                    .background(Color.Transparent)
+                    .offset(x = 313.dp, y = 5.dp)
+                    .size(with(LocalDensity.current) { 100.dp }),
+                colors = ButtonDefaults.buttonColors(Color.Transparent)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_front_hand_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp)
                 )
             }
         }
