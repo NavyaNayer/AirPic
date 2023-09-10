@@ -1,14 +1,20 @@
 Jayashre's file
 
-Learning Kotlin File
+Learning Kotlin
 Learning OpenGL Es for creating overall filter
 
-
-To Build nav bar and bottom bar
-
-To Build four buttons on nav bar 
-
-To give functions to those bottom button
+- Add Functionality to Gallery Button
+- Add Functionality to Settings Button
+- Add Functionality to Flash Button (On and Off)
+- Add Funtionality to Gesture Button
+- Add a Screen to Settings Button Functionality
+- Add different Shutter Icon to the Video Button 
+- When Video Button is clicked - Implement different shutter Icon
+- Adding Functionality to Timer Button
+- Swiping left to access video mode (from photo mode)
+- Swiping right to access filters (from any mode)
+- Video timer going on
+- Adding animation to Shutter Button (when it is clicked)
 
 Creation of Filters
 
@@ -27,3 +33,7 @@ Completed Tasks:
 - Built Mainframe as the Camera Frame
 - Built Three Buttons with a box background at bottom
 - Pinch Zooming is Working
+- Built Four Buttons with a box background at top
+- Gave function to Flip camera Button
+- Added Photo and Video Mode Button
+- Added Function to Shutter Button (only Photo Mode)
