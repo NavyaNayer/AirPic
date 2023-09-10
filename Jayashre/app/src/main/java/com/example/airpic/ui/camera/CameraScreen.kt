@@ -46,11 +46,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.airpic.R
 import java.util.Locale
 
 @Composable
@@ -113,54 +116,36 @@ private fun CameraContent() {
         }
     }
 
-    fun takePhotoOrRecordVideo() {
+    fun takePhoto() {
         val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.UK)
             .format(System.currentTimeMillis())
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            if (cameraMode == CameraMode.PHOTO) {
-                put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                    put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/AirPic")
-                }
-            } else if (cameraMode == CameraMode.VIDEO) {
-                put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                    put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/AirPic")
-                }
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/AirPic")
             }
         }
-
         val outputOptions = ImageCapture.OutputFileOptions
             .Builder(contentResolver,
-                if (cameraMode == CameraMode.PHOTO) {
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                } else {
-                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                },
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValues)
             .build()
-
         cameraController.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(context),
-            object : ImageCapture.OnImageSavedCallback {
+            object: ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
-                    Log.e(TAG, "Capture failed: ${exc.message}", exc)
+                    Log.e(TAG, "Photo capture failed: ${exc.message}",exc)
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val msg = if (cameraMode == CameraMode.PHOTO) {
-                        "Photo captured: ${output.savedUri}"
-                    } else {
-                        "Video recorded: ${output.savedUri}"
-                    }
-                    Log.d(TAG, msg)
+                    val msg = "Photo captured: ${output.savedUri}"
+                    Log.d(TAG,msg)
                 }
             }
         )
     }
-
 
     Box(
         modifier = Modifier
@@ -177,7 +162,8 @@ private fun CameraContent() {
 
     ) {
         Text("Photo",
-            color = if (cameraMode == CameraMode.PHOTO) Color(0XFFFDFEFF) else Color.Black)
+            color = if (cameraMode == CameraMode.PHOTO) Color(0XFFFDFEFF) else Color.Black,
+            fontSize = 15.sp)
     }
         Button(
             onClick = { cameraMode = CameraMode.VIDEO
@@ -190,7 +176,7 @@ private fun CameraContent() {
 
         ) {
             Text("Video",
-                color = if (cameraMode == CameraMode.VIDEO) Color(0XFFFDFEFF) else Color.Black)
+                color = if (cameraMode == CameraMode.VIDEO) Color(0XFFFDFEFF) else Color.Black, fontSize = 15.sp)
         }
 
         Box (
@@ -215,13 +201,18 @@ private fun CameraContent() {
         }
             FloatingActionButton(
                 onClick = {
-                    takePhotoOrRecordVideo()
+                    takePhoto()
                 },
                 modifier = shutterButtonModifier,
-                backgroundColor = androidx.compose.ui.graphics.Color.White,
+                backgroundColor = androidx.compose.ui.graphics.Color.Transparent,
                 contentColor = androidx.compose.ui.graphics.Color.White
-            ) {
 
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_shutter),
+                    contentDescription = null,
+                    modifier = Modifier.size(100.dp)
+                )
             }
 
             FloatingActionButton(
@@ -235,7 +226,7 @@ private fun CameraContent() {
                 Icon(
                     imageVector = Icons.Default.FlipCameraAndroid,
                     contentDescription = null,
-                    modifier = Modifier.size(30.dp)
+                    modifier = Modifier.size(35.dp)
                 )
             }
         }
