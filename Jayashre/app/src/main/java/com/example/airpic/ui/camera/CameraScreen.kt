@@ -70,7 +70,6 @@ private fun CameraContent() {
                 .fillMaxWidth()
                 .fillMaxHeight() ,
             factory = { context ->
-                // Inflate the XML layout
                 val inflater = LayoutInflater.from(context)
                 val view = inflater.inflate(R.layout.activity_main, null)
                 view
