@@ -7,7 +7,6 @@ Tasks that need to be done
 - Added Function to Shutter Button (Photo)
 - Add Function to Shutter Button (Video)
 - Add Functionality to Gallery Button
-- Add Funcationality to Flip Camera Button
 - Add Functionality to Settings Button
 - Add Functionality to Flash Button (On and Off)
 - Add Funtionality to Gesture Button
@@ -18,7 +17,6 @@ Tasks that need to be done
 - Swiping right and left to access filters (from any mode)
 - Video timer going on
 - Adding animation to Shutter Button (when it is clicked)
-- Adding animation to flip button
 - Add 3sec and 10 sec xml file 
 - Logic for changing timer icon:
     - timer icon to 3 sec icon
@@ -62,6 +60,7 @@ Completed Tasks:
 - Also created xml file for video shutter button and stopping button
 - Added Photo And Video Mode Button
     - For this, created xml file for purple rounded corner button and white rounded corner button 
+- Added Functionality to the Flip Camera
 
 
 Additional Tasks:
