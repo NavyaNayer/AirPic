@@ -10,17 +10,11 @@ Tasks that need to be done
 - Add Functionality to Flash Button - Not Working
 - Add Funtionality to Gesture Button
 - Add a Screen to Settings Button Functionality
-- Add different Shutter Icon to the Video Button 
 - When Video Button is clicked - Implement different shutter Icon
 - Adding Functionality to Timer Button
 - Swiping right and left to access filters (from any mode)
 - Video timer going on
 - Adding animation to Shutter Button (when it is clicked)
-- Add 3sec and 10 sec xml file 
-- Logic for changing timer icon:
-    - timer icon to 3 sec icon
-    - 3 sec icon to 10 sec icon
-    - 10 sec icon to timer icon
 - Logic for changing color for bg and text in mode buttons:
     - deafault photo mode - purple bg with white text
     - if video mode clicked:
@@ -29,9 +23,6 @@ Tasks that need to be done
     - if photo mode clicked:
         - photo mode's bg should be purple and text should be white
         - video mode's bg is white and text is black
-- Logic for changing gesture icon:
-    - gesture off icon to gesture on icon
-    - gesture on icon to gesture off icon
 
 Creation of overall filters
 Implementation of OpenGL ES
@@ -61,6 +52,16 @@ Completed Tasks:
 - Added Logic for changing flash icon:
        - flash off icon to flash on icon
        - flash on icon to flash off icon
+- Added Logic for changing timer icon:
+       - timer icon to 3 sec icon
+       - 3 sec icon to 10 sec icon
+       - 10 sec icon to timer icon
+   - For this :
+       - Added 3 sec and 10 sec icons xml
+- Added Logic for changing gesture icon:
+    - gesture off icon to gesture on icon
+    - gesture on icon to gesture off icon
+    - For this: added yellow hand gesture and normal hand gesture hand icon
 
 
 
