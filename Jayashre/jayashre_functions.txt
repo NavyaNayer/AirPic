@@ -4,11 +4,10 @@ Learning Kotlin
 Learning OpenGL Es for creating overall filter
 
 Tasks that need to be done
-- Added Function to Shutter Button (Photo)
 - Add Function to Shutter Button (Video)
 - Add Functionality to Gallery Button
 - Add Functionality to Settings Button
-- Add Functionality to Flash Button (On and Off)
+- Add Functionality to Flash Button - Not Working
 - Add Funtionality to Gesture Button
 - Add a Screen to Settings Button Functionality
 - Add different Shutter Icon to the Video Button 
@@ -22,9 +21,6 @@ Tasks that need to be done
     - timer icon to 3 sec icon
     - 3 sec icon to 10 sec icon
     - 10 sec icon to timer icon
-- Logic for changing flash icon:
-    - flash off icon to flash on icon
-    - flash on icon to flash off icon
 - Logic for changing color for bg and text in mode buttons:
     - deafault photo mode - purple bg with white text
     - if video mode clicked:
@@ -61,6 +57,11 @@ Completed Tasks:
 - Added Photo And Video Mode Button
     - For this, created xml file for purple rounded corner button and white rounded corner button 
 - Added Functionality to the Flip Camera
+- Added Functionality to the Shutter (Photo)
+- Added Logic for changing flash icon:
+       - flash off icon to flash on icon
+       - flash on icon to flash off icon
+
 
 
 Additional Tasks:
