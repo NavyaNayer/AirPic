@@ -4,12 +4,14 @@ package com.example.airpic.ui.camera
 
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.camera.core.CameraSelector
@@ -134,8 +136,41 @@ private fun CameraContent() {
 
     }
 
+    val shutterButton = view.findViewById<ImageButton>(R.id.shutterButton)
+    val photoModeButton = view.findViewById<Button>(R.id.photoButton)
+    val videoModeButton = view.findViewById<Button>(R.id.videoButton)
 
+    fun setPhotoMode() {
+        cameraMode = CameraMode.PHOTO
+        photoModeButton.setBackgroundResource(R.drawable.ic_rounded_purple_button)
+        photoModeButton.setTextColor(Color.WHITE)
+        videoModeButton.setBackgroundResource(R.drawable.ic_rounded_white_button)
+        videoModeButton.setTextColor(Color.BLACK)
+        shutterButton.setImageResource(R.drawable.ic_shutter)
+    }
 
+    fun setVideoMode() {
+        cameraMode = CameraMode.VIDEO
+        videoModeButton.setBackgroundResource(R.drawable.ic_rounded_purple_button)
+        videoModeButton.setTextColor(Color.WHITE)
+        photoModeButton.setBackgroundResource(R.drawable.ic_rounded_white_button)
+        photoModeButton.setTextColor(Color.BLACK)
+        shutterButton.setImageResource(R.drawable.ic_record_button)
+    }
+
+    setPhotoMode()
+
+    photoModeButton.setOnClickListener {
+        if (cameraMode != CameraMode.PHOTO) {
+            setPhotoMode()
+        }
+    }
+
+    videoModeButton.setOnClickListener {
+        if (cameraMode != CameraMode.VIDEO) {
+            setVideoMode()
+        }
+    }
 
 
     fun toggleCamerafunc () {
@@ -182,7 +217,6 @@ private fun CameraContent() {
         )
     }
 
-    val shutterButton = view.findViewById<ImageButton>(R.id.shutterButton)
     shutterButton.setOnClickListener{
         takePhoto()
     }
