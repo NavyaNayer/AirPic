@@ -100,6 +100,41 @@ private fun CameraContent() {
             else ImageCapture.FLASH_MODE_OFF*/ //not working
     }
 
+    var timerState = 0
+    val timerButton = view.findViewById<ImageButton>(R.id.timerButton)
+    fun updateTimer() {
+        when (timerState) {
+            0 -> {
+                timerButton.setImageResource(R.drawable.ic_timer)
+            }
+            1 -> {
+                timerButton.setImageResource(R.drawable.ic_three_timer)
+            }
+            2 -> {
+                timerButton.setImageResource(R.drawable.ic_ten_timer)
+            }
+        }
+    }
+
+    updateTimer()
+    timerButton.setOnClickListener{
+        timerState = (timerState + 1) % 3
+        updateTimer()
+    }
+
+    var isGestureOn by remember { mutableStateOf(false) }
+    val gestureButton = view.findViewById<ImageButton>(R.id.gestureButton)
+    gestureButton.setOnClickListener{
+        isGestureOn = !isGestureOn
+
+        gestureButton.setImageResource(
+            if (isGestureOn) R.drawable.ic_hand_gesture_clicked
+            else R.drawable.ic_hand_gesture
+        )
+
+    }
+
+
 
     fun toggleCamerafunc () {
         cameraController.cameraSelector =
@@ -149,7 +184,6 @@ private fun CameraContent() {
     shutterButton.setOnClickListener{
         takePhoto()
     }
-
 
 }
 
