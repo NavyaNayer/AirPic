@@ -2,11 +2,19 @@ package com.example.airpic.ui.camera
 
 
 
+import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.icu.text.SimpleDateFormat
+import android.os.Build
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,8 +33,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.airpic.R
+import java.util.Locale
 
 @Composable
 fun CameraScreen (
@@ -74,18 +84,72 @@ private fun CameraContent() {
                 view
             })
     }
-        fun toggleCamerafunc () {
-            cameraController.cameraSelector =
-                if (cameraController.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
-                    CameraSelector.DEFAULT_FRONT_CAMERA
-                } else {
-                    CameraSelector.DEFAULT_BACK_CAMERA
-                }
-        }
-    var flipcamera = view.findViewById<ImageButton>(R.id.flipCameraButton)
+
+    var isTorchOn by remember { mutableStateOf(false) }
+    val flashButton = view.findViewById<ImageButton>(R.id.flashButton)
+    flashButton.setOnClickListener {
+        isTorchOn = !isTorchOn
+
+        flashButton.setImageResource(
+            if (isTorchOn) R.drawable.ic_flash_on
+            else R.drawable.ic_flash_off
+        )
+
+        /*imageCapture.flashMode =
+            if (isTorchOn) ImageCapture.FLASH_MODE_ON
+            else ImageCapture.FLASH_MODE_OFF*/ //not working
+    }
+
+
+    fun toggleCamerafunc () {
+        cameraController.cameraSelector =
+            if (cameraController.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
+                CameraSelector.DEFAULT_FRONT_CAMERA
+            } else {
+                CameraSelector.DEFAULT_BACK_CAMERA
+            }
+    }
+    val flipcamera = view.findViewById<ImageButton>(R.id.flipCameraButton)
     flipcamera.setOnClickListener {
         toggleCamerafunc()
     }
+
+    fun takePhoto() {
+        val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.UK)
+            .format(System.currentTimeMillis())
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/AirPic")
+            }
+        }
+        val outputOptions = ImageCapture.OutputFileOptions
+            .Builder(contentResolver,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValues)
+            .build()
+        cameraController.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(context),
+            object: ImageCapture.OnImageSavedCallback {
+                override fun onError(exc: ImageCaptureException) {
+                    Log.e(TAG, "Photo capture failed: ${exc.message}",exc)
+                }
+
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    val msg = "Photo captured: ${output.savedUri}"
+                    Log.d(TAG,msg)
+                }
+            }
+        )
+    }
+
+    val shutterButton = view.findViewById<ImageButton>(R.id.shutterButton)
+    shutterButton.setOnClickListener{
+        takePhoto()
+    }
+
 
 }
 
