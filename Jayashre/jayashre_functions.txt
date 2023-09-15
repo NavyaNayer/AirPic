@@ -10,19 +10,12 @@ Tasks that need to be done
 - Add Functionality to Flash Button - Not Working
 - Add Funtionality to Gesture Button
 - Add a Screen to Settings Button Functionality
-- When Video Button is clicked - Implement different shutter Icon
 - Adding Functionality to Timer Button
 - Swiping right and left to access filters (from any mode)
 - Video timer going on
 - Adding animation to Shutter Button (when it is clicked)
-- Logic for changing color for bg and text in mode buttons:
-    - deafault photo mode - purple bg with white text
-    - if video mode clicked:
-        - video mode's bg should be purple and text should be white
-        - photo mode's bg is white and text is black
-    - if photo mode clicked:
-        - photo mode's bg should be purple and text should be white
-        - video mode's bg is white and text is black
+
+
 
 Creation of overall filters
 Implementation of OpenGL ES
@@ -44,7 +37,7 @@ Completed Tasks:
     - For this, created xml for settings icon, flash on icon, flash off icon , hand gesture on icon and hand gesture off icon
 - Added Three Buttons with a box background at bottom end (via an xml file ,using Relative Layout)
     - For this, created xml file purple background circle, gallery icon, flip camera icon, purple_outline circle and white shutter Button
-- Also created xml file for video shutter button and stopping button
+- Also created xml file for stopping button
 - Added Photo And Video Mode Button
     - For this, created xml file for purple rounded corner button and white rounded corner button 
 - Added Functionality to the Flip Camera
@@ -62,7 +55,16 @@ Completed Tasks:
     - gesture off icon to gesture on icon
     - gesture on icon to gesture off icon
     - For this: added yellow hand gesture and normal hand gesture hand icon
-
+- Added Logic for changing color for bg and text in mode buttons:
+      - default photo mode - purple bg with white text
+      - if video mode clicked:
+           - video mode's bg should be purple and text should be white
+           - photo mode's bg is white and text is black
+      - if photo mode clicked:
+           - photo mode's bg should be purple and text should be white
+           - video mode's bg is white and text is black
+- Added Logic for When Video Mode Button is clicked - Implement different shutter Icon (same goes to Photo Mode)
+    - For this:  created xml file for video shutter button (red)
 
 
 Additional Tasks:
