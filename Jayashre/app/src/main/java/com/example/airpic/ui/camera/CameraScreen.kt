@@ -74,7 +74,7 @@ private fun CameraContent() {
                 view
             })
     }
-        fun toggleCamera () {
+        fun toggleCamerafunc () {
             cameraController.cameraSelector =
                 if (cameraController.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
                     CameraSelector.DEFAULT_FRONT_CAMERA
@@ -84,7 +84,7 @@ private fun CameraContent() {
         }
     var flipcamera = view.findViewById<ImageButton>(R.id.flipCameraButton)
     flipcamera.setOnClickListener {
-        toggleCamera()
+        toggleCamerafunc()
     }
 
 }
