@@ -4,6 +4,7 @@ package com.example.airpic.ui.camera
 
 import android.view.LayoutInflater
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.camera.core.CameraSelector
 import androidx.camera.view.LifecycleCameraController
@@ -48,10 +49,10 @@ private fun CameraContent() {
     val contentResolver = LocalContext.current.contentResolver
     val cameraController = remember { LifecycleCameraController(context) }
     cameraController.cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+    val view = LayoutInflater.from(context).inflate(R.layout.activity_main, null)
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
-
     ) { paddingValues: PaddingValues ->
         AndroidView(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
@@ -68,17 +69,23 @@ private fun CameraContent() {
         AndroidView(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight() ,
+                .fillMaxHeight(),
             factory = { context ->
-                val inflater = LayoutInflater.from(context)
-                val view = inflater.inflate(R.layout.activity_main, null)
                 view
-
-            }
-        )
-
+            })
     }
-
+        fun toggleCamera () {
+            cameraController.cameraSelector =
+                if (cameraController.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
+                    CameraSelector.DEFAULT_FRONT_CAMERA
+                } else {
+                    CameraSelector.DEFAULT_BACK_CAMERA
+                }
+        }
+    var flipcamera = view.findViewById<ImageButton>(R.id.flipCameraButton)
+    flipcamera.setOnClickListener {
+        toggleCamera()
+    }
 
 }
 
