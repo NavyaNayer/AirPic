@@ -2,4 +2,9 @@
     <string name="app_name">AirPic</string>
     <string name="photo">Photo</string>
     <string name="video">Video</string>
+    <string name="allow_your_camera">Allow Your Camera</string>
+    <string name="second_text">We will need your camera to give you better experience</string>
+    <string name="allow">Allow</string>
+    <string name="allow_your_audio">Allow Your Audio</string>
+    <string name="second_audio_text">We will need your audio to give you better experience</string>
 </resources>
