@@ -31,6 +31,9 @@ Completed Tasks:
 - Built the Logo for app
 - Built the Splash Screen using SplashScreen API
 - Built the Camera Permission Screen
+    - For this: Added Whole XML Layout Screen, Camera Icon XML File, Rounded Button XML File
+- Built the Audio Permission Screen
+    - For this: Added Whole XML Layout Screen, Audio Icon XML File
 - Built Mainframe as the Camera Frame (using CameraX Camera Controller Library)
 - Pinch Zooming is Working (comes with CameraX)
 - Added Four Buttons on the top with transparent box (via an xml file, using Relative Layout and Linear Layout)
