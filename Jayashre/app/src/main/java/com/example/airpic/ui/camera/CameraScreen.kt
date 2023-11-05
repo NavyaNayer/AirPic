@@ -2,43 +2,54 @@ package com.example.airpic.ui.camera
 
 
 
-import android.content.ContentValues
-import android.content.ContentValues.TAG
-import android.graphics.Color
-import android.icu.text.SimpleDateFormat
-import android.os.Build
-import android.provider.MediaStore
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.ImageProxy
+import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
-import androidx.camera.view.PreviewView
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cameraswitch
+import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.airpic.R
-import java.util.Locale
+import kotlinx.coroutines.launch
+
 
 @Composable
 fun CameraScreen (
@@ -52,176 +63,242 @@ enum class CameraMode {
     VIDEO
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun CameraContent() {
-
     var cameraMode by remember { mutableStateOf(CameraMode.PHOTO) }
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val contentResolver = LocalContext.current.contentResolver
-    val cameraController = remember { LifecycleCameraController(context) }
-    cameraController.cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-    val view = LayoutInflater.from(context).inflate(R.layout.activity_main, null)
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberBottomSheetScaffoldState()
+    val controller = remember {
+        LifecycleCameraController(context).apply {
+            setEnabledUseCases(
+                CameraController.IMAGE_CAPTURE or
+                        CameraController.VIDEO_CAPTURE
+            )
+        }
+    }
+    val viewModel = viewModel<CameraViewModel>()
+    val bitmaps by viewModel.bitmaps.collectAsState()
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize()
-    ) { paddingValues: PaddingValues ->
-        AndroidView(
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
-            factory = { context ->
-                PreviewView(context).apply {
-                    layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-                    setBackgroundColor(android.graphics.Color.BLACK)
-                    scaleType = PreviewView.ScaleType.FILL_START
-                }.also { previewView ->
-                    previewView.controller = cameraController
-                    cameraController.bindToLifecycle(lifecycleOwner)
-                }
-            })
-        AndroidView(
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
+        sheetPeekHeight = 0.dp,
+        sheetContent = {
+            GalleryBottom(
+                bitmaps = bitmaps,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0x80330066))
+            )
+        }
+    ) { padding ->
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            factory = { context ->
-                view
-            })
-    }
+                .fillMaxSize()
+                .padding(padding),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            CameraState(
+                controller = controller,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+            Button(
+                onClick = { cameraMode = CameraMode.PHOTO
+                    Log.d("CameraScreen", "Photo button clicked") },
+                modifier = Modifier
+                    .background(Color.Transparent)
+                    .offset(x = -(210.dp), y = -(215.dp))
+                    .clip(RoundedCornerShape(5.dp)),
+                colors = ButtonDefaults.buttonColors(if (cameraMode == CameraMode.PHOTO) Color(0x80330066) else Color(0x80FDFEFF))
 
-    var isTorchOn by remember { mutableStateOf(false) }
-    val flashButton = view.findViewById<ImageButton>(R.id.flashButton)
-    flashButton.setOnClickListener {
-        isTorchOn = !isTorchOn
-
-        flashButton.setImageResource(
-            if (isTorchOn) R.drawable.ic_flash_on
-            else R.drawable.ic_flash_off
-        )
-
-        /*imageCapture.flashMode =
-            if (isTorchOn) ImageCapture.FLASH_MODE_ON
-            else ImageCapture.FLASH_MODE_OFF*/ //not working
-    }
-
-    var timerState = 0
-    val timerButton = view.findViewById<ImageButton>(R.id.timerButton)
-    fun updateTimer() {
-        when (timerState) {
-            0 -> {
-                timerButton.setImageResource(R.drawable.ic_timer)
+            ) {
+                Text("Photo",
+                    color = if (cameraMode == CameraMode.PHOTO) Color(0XFFFDFEFF) else Color.Black)
             }
-            1 -> {
-                timerButton.setImageResource(R.drawable.ic_three_timer)
-            }
-            2 -> {
-                timerButton.setImageResource(R.drawable.ic_ten_timer)
-            }
-        }
-    }
+                Button(
+                    onClick = { cameraMode = CameraMode.VIDEO
+                        Log.d("CameraScreen", "Video button clicked") },
+                    modifier = Modifier
+                        .background(Color.Transparent)
+                        .offset(x = -(115.dp), y = -(215.dp))
+                        .clip(RoundedCornerShape(5.dp)),
+                    colors = ButtonDefaults.buttonColors(if (cameraMode == CameraMode.VIDEO) Color(0x80330066) else Color(0x80FDFEFF))
 
-    updateTimer()
-    timerButton.setOnClickListener{
-        timerState = (timerState + 1) % 3
-        updateTimer()
-    }
-
-    var isGestureOn by remember { mutableStateOf(false) }
-    val gestureButton = view.findViewById<ImageButton>(R.id.gestureButton)
-    gestureButton.setOnClickListener{
-        isGestureOn = !isGestureOn
-
-        gestureButton.setImageResource(
-            if (isGestureOn) R.drawable.ic_hand_gesture_clicked
-            else R.drawable.ic_hand_gesture
-        )
-
-    }
-
-    val shutterButton = view.findViewById<ImageButton>(R.id.shutterButton)
-    val photoModeButton = view.findViewById<Button>(R.id.photoButton)
-    val videoModeButton = view.findViewById<Button>(R.id.videoButton)
-
-    fun setPhotoMode() {
-        cameraMode = CameraMode.PHOTO
-        photoModeButton.setBackgroundResource(R.drawable.ic_rounded_purple_button)
-        photoModeButton.setTextColor(Color.WHITE)
-        videoModeButton.setBackgroundResource(R.drawable.ic_rounded_white_button)
-        videoModeButton.setTextColor(Color.BLACK)
-        shutterButton.setImageResource(R.drawable.ic_shutter)
-    }
-
-    fun setVideoMode() {
-        cameraMode = CameraMode.VIDEO
-        videoModeButton.setBackgroundResource(R.drawable.ic_rounded_purple_button)
-        videoModeButton.setTextColor(Color.WHITE)
-        photoModeButton.setBackgroundResource(R.drawable.ic_rounded_white_button)
-        photoModeButton.setTextColor(Color.BLACK)
-        shutterButton.setImageResource(R.drawable.ic_record_button)
-    }
-
-    setPhotoMode()
-
-    photoModeButton.setOnClickListener {
-        if (cameraMode != CameraMode.PHOTO) {
-            setPhotoMode()
-        }
-    }
-
-    videoModeButton.setOnClickListener {
-        if (cameraMode != CameraMode.VIDEO) {
-            setVideoMode()
-        }
-    }
-
-
-    fun toggleCamerafunc () {
-        cameraController.cameraSelector =
-            if (cameraController.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
-                CameraSelector.DEFAULT_FRONT_CAMERA
-            } else {
-                CameraSelector.DEFAULT_BACK_CAMERA
-            }
-    }
-    val flipcamera = view.findViewById<ImageButton>(R.id.flipCameraButton)
-    flipcamera.setOnClickListener {
-        toggleCamerafunc()
-    }
-
-    fun takePhoto() {
-        val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.UK)
-            .format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/AirPic")
-            }
-        }
-        val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(contentResolver,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues)
-            .build()
-        cameraController.takePicture(
-            outputOptions,
-            ContextCompat.getMainExecutor(context),
-            object: ImageCapture.OnImageSavedCallback {
-                override fun onError(exc: ImageCaptureException) {
-                    Log.e(TAG, "Photo capture failed: ${exc.message}",exc)
+                ) {
+                    Text("Video",
+                        color = if (cameraMode == CameraMode.VIDEO) Color(0XFFFDFEFF) else Color.Black)
                 }
 
-                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val msg = "Photo captured: ${output.savedUri}"
-                    Log.d(TAG,msg)
+                Box (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(215.dp)
+                        .background(Color.Transparent)
+                ){
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
+                        },
+                        modifier = Modifier
+                            .size(with(LocalDensity.current) { 70.dp })
+                            .offset(x = 40.dp, y = 75.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PhotoLibrary,
+                            contentDescription = null,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            takePhoto(
+                                context = context,
+                                controller = controller,
+                                onPhotoTaken = viewModel::onTakePhoto
+                            )
+                        },
+                        modifier = Modifier
+                            .size(with(LocalDensity.current) { 100.dp })
+                            .offset(x = 155.dp, y = 55.dp),
+                    ) {
+
+                    }
+
+                    Button(
+                        onClick = {
+                            toggleCamera(controller)
+                        },
+                        modifier = Modifier
+                            .size(with(LocalDensity.current) { 70.dp })
+                            .offset(x = (300.dp), y = 75.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Cameraswitch,
+                            contentDescription = "Switch camera",
+                            modifier = Modifier.size(75.dp)
+                        )
+                    }
                 }
+
+
+
+
+
+
+            /*
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(215.dp)
+                            .background(Color.Transparent)
+                    ) {
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    scaffoldState.bottomSheetState.expand()
+                                }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Photo,
+                                contentDescription = "Open gallery",
+                                modifier = Modifier.size(75.dp)
+                            )
+                        }
+
+                        IconButton(
+                            modifier = Modifier.size(95.dp),
+                            onClick = {
+                                takePhoto(
+                                    context = context,
+                                    controller = controller,
+                                    onPhotoTaken = viewModel::onTakePhoto
+                                )
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_shutter),
+                                contentDescription = "Take photo",
+                                modifier = Modifier.size(300.dp)
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                controller.cameraSelector =
+                                    if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
+                                        CameraSelector.DEFAULT_FRONT_CAMERA
+                                    } else {
+                                        CameraSelector.DEFAULT_BACK_CAMERA
+                                    }
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Cameraswitch,
+                                contentDescription = "Switch camera",
+                                modifier = Modifier.size(75.dp)
+                            )
+                        }
+                    }*/
             }
-        )
-    }
+        }
+        }
 
-    shutterButton.setOnClickListener{
-        takePhoto()
-    }
 
+
+private fun toggleCamera (controller: LifecycleCameraController) {
+    controller.cameraSelector =
+        if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
+            CameraSelector.DEFAULT_FRONT_CAMERA
+        } else {
+            CameraSelector.DEFAULT_BACK_CAMERA
+        }
 }
+private fun captureVideo() {
+    Log.d("Video", "Captured Video")
+}
+private fun takePhoto(
+    context: Context,
+    controller: LifecycleCameraController,
+    onPhotoTaken: (Bitmap) -> Unit
+) {
+    controller.takePicture(
+        ContextCompat.getMainExecutor(context),
+        object : ImageCapture.OnImageCapturedCallback() {
+            override fun onCaptureSuccess(image: ImageProxy) {
+                super.onCaptureSuccess(image)
+
+                val matrix = Matrix().apply {
+                    postRotate(image.imageInfo.rotationDegrees.toFloat())
+                }
+                val rotatedBitmap = Bitmap.createBitmap(
+                    image.toBitmap(),
+                    0,
+                    0,
+                    image.width,
+                    image.height,
+                    matrix,
+                    false
+                )
+
+                onPhotoTaken(rotatedBitmap)
+            }
+
+            override fun onError(exception: ImageCaptureException) {
+                super.onError(exception)
+                Log.e("Camera", "Couldn't take photo: ", exception)
+            }
+        }
+    )
+}
+
+
+
+
+
 
 @Preview
 @Composable
