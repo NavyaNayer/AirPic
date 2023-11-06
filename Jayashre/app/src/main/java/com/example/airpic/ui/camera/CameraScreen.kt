@@ -451,7 +451,11 @@ private fun takePhoto(
 
             override fun onError(exception: ImageCaptureException) {
                 super.onError(exception)
-                Log.e("Camera", "Couldn't take photo: ", exception)
+                Toast.makeText(
+                    context,
+                    "Photo capture failed",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     )
