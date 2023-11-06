@@ -184,6 +184,7 @@ private fun CameraContent() {
                 }
 
                 Button(
+                    colors = ButtonDefaults.buttonColors(Color(0XFF330066)),
                     onClick = {
                         toggleCamera(controller)
                     },
@@ -194,7 +195,8 @@ private fun CameraContent() {
                     Icon(
                         imageVector = Icons.Default.Cameraswitch,
                         contentDescription = "Switch camera",
-                        modifier = Modifier.size(100.dp)
+                        modifier = Modifier.size(105.dp),
+                        tint = Color(0XFFFFFFFF)
                     )
                 }
             }
