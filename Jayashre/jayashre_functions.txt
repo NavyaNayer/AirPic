@@ -5,7 +5,6 @@ Learning OpenGL Es for creating overall filter
 
 Tasks that need to be done
 - Add Functionality to Settings Button
-- Add Functionality to Flash Button - Not Working
 - Add Funtionality to Gesture Button
 - Add a Screen to Settings Button Functionality
 - Adding Functionality to Timer Button
@@ -54,17 +53,17 @@ New Completed Tasks
 - Added functionality to the shutter button when video is enabled
 - In Photo Mode, the images can be viewed only by the gallery option provided
 - In Video Mode, the videos can be viewd only by the media gallery
+- Added Four Buttons on the top with translucent white box
+- Added Settings button with transparent bg and dark violet icon
+- Added flash button with transparent bg and dark violet icon
+- Added Functionality to the flash button
+- Added Logic for changing flash icon:
+         - flash off icon to flash on icon (icon)
+         - flash on icon to flash off icon (icon)
 
 
 Old Completed Tasks (needs to be revisited again):
-- Added Four Buttons on the top with transparent box (via an xml file, using Relative Layout and Linear Layout)
-    - For this, created xml for settings icon, flash on icon, flash off icon , hand gesture on icon and hand gesture off icon
-- Added Three Buttons with a box background at bottom end (via an xml file ,using Relative Layout)
-    - For this, created xml file purple background circle, gallery icon, flip camera icon, purple_outline circle and white shutter Button
 - Also created xml file for stopping button
-- Added Logic for changing flash icon:
-       - flash off icon to flash on icon
-       - flash on icon to flash off icon
 - Added Logic for changing timer icon:
        - timer icon to 3 sec icon
        - 3 sec icon to 10 sec icon
