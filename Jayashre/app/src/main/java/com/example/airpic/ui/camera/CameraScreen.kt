@@ -2,16 +2,26 @@ package com.example.airpic.ui.camera
 
 
 
+import android.annotation.SuppressLint
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
+import androidx.camera.video.MediaStoreOutputOptions
+import androidx.camera.video.Recording
+import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
+import androidx.camera.view.video.AudioConfig
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -50,6 +60,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 @Composable
@@ -64,6 +76,7 @@ enum class CameraMode {
     VIDEO
 }
 
+private var recording: Recording? = null
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun CameraContent() {
@@ -71,6 +84,7 @@ private fun CameraContent() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
+    val contentResolver = LocalContext.current.contentResolver
     val controller = remember {
         LifecycleCameraController(context).apply {
             setEnabledUseCases(
@@ -180,7 +194,7 @@ private fun CameraContent() {
                         0XFFFF0000
                     ) else Color(0XFFFFFFFF)),
                     onClick = {
-                        decideCameramode(context = context, controller = controller, onPhototaken = viewModel::onTakePhoto, cameraMode = cameraMode)
+                        decideCameramode(context = context, controller = controller, onPhototaken = viewModel::onTakePhoto, cameraMode = cameraMode, contentResolver = contentResolver)
                     },
                     modifier = Modifier
                         .size(with(LocalDensity.current) { 100.dp })
@@ -205,69 +219,13 @@ private fun CameraContent() {
                     )
                 }
             }
-
-
-            /*
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(215.dp)
-                            .background(Color.Transparent)
-                    ) {
-                        IconButton(
-                            onClick = {
-                                scope.launch {
-                                    scaffoldState.bottomSheetState.expand()
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Photo,
-                                contentDescription = "Open gallery",
-                                modifier = Modifier.size(75.dp)
-                            )
-                        }
-
-                        IconButton(
-                            modifier = Modifier.size(95.dp),
-                            onClick = {
-                                takePhoto(
-                                    context = context,
-                                    controller = controller,
-                                    onPhotoTaken = viewModel::onTakePhoto
-                                )
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_shutter),
-                                contentDescription = "Take photo",
-                                modifier = Modifier.size(300.dp)
-                            )
-                        }
-                        IconButton(
-                            onClick = {
-                                controller.cameraSelector =
-                                    if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
-                                        CameraSelector.DEFAULT_FRONT_CAMERA
-                                    } else {
-                                        CameraSelector.DEFAULT_BACK_CAMERA
-                                    }
-                            },
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Cameraswitch,
-                                contentDescription = "Switch camera",
-                                modifier = Modifier.size(75.dp)
-                            )
-                        }
-                    }*/
         }
     }
 
 }
 
 
-private fun decideCameramode(context: Context, controller: LifecycleCameraController, onPhototaken: (Bitmap) -> Unit, cameraMode: CameraMode) {
+private fun decideCameramode(context: Context, controller: LifecycleCameraController, onPhototaken: (Bitmap) -> Unit, cameraMode: CameraMode, contentResolver: ContentResolver) {
     when (cameraMode) {
         CameraMode.PHOTO -> takePhoto(
             context = context,
@@ -275,7 +233,7 @@ private fun decideCameramode(context: Context, controller: LifecycleCameraContro
             onPhotoTaken = onPhototaken
         )
 
-        CameraMode.VIDEO -> captureVideo()
+        CameraMode.VIDEO -> captureVideo(controller, context, contentResolver)
     }
 }
 private fun toggleCamera (controller: LifecycleCameraController) {
@@ -286,8 +244,51 @@ private fun toggleCamera (controller: LifecycleCameraController) {
             CameraSelector.DEFAULT_BACK_CAMERA
         }
 }
-private fun captureVideo() {
-    Log.d("Video", "Captured Video")
+@SuppressLint("MissingPermission")
+private fun captureVideo(controller: LifecycleCameraController, context: Context, contentResolver: ContentResolver) {
+
+    if (recording != null) {
+        recording?.stop()
+        recording = null
+        return
+    }
+    val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.UK)
+        .format(System.currentTimeMillis())
+    val contentValues = ContentValues().apply {
+        put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+        put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/AirPic")
+        }
+    }
+
+    val mediaStoreOutputOptions = MediaStoreOutputOptions
+        .Builder(contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
+        .setContentValues(contentValues)
+        .build()
+
+
+    recording = controller.startRecording(
+        mediaStoreOutputOptions,
+        AudioConfig.create(true),
+        ContextCompat.getMainExecutor(context),
+    ) { event ->
+        when (event) {
+            is VideoRecordEvent.Finalize -> {
+                if (event.hasError()) {
+                    recording?.close()
+                    recording = null
+
+                    Toast.makeText(
+                        context,
+                        "Video capture failed",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+        Log.d("Video", "Captured Video")
+    }
 }
 private fun takePhoto(
     context: Context,
