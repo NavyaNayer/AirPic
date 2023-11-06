@@ -40,6 +40,9 @@ import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Timer10Select
+import androidx.compose.material.icons.filled.Timer3Select
+import androidx.compose.material.icons.filled.TimerOff
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -86,7 +89,7 @@ private var recording: Recording? = null
 private fun CameraContent() {
     var cameraMode by remember { mutableStateOf(CameraMode.PHOTO) }
     var isTorchOn by remember { mutableStateOf(false) }
-
+    var timerState by remember { mutableStateOf(0) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
@@ -286,7 +289,8 @@ private fun CameraContent() {
 
                 Button (
                     onClick = {
-                        Log.d("CameraScreen", "Settings button clicked")
+                        timerState = (timerState + 1) % 3
+                        Log.d("CameraScreen", "Timer state changed to $timerState")
                     },
                     modifier = Modifier
                         .background(Color.Transparent)
@@ -294,8 +298,14 @@ private fun CameraContent() {
                         .size(with(LocalDensity.current) { 100.dp }),
                     colors = ButtonDefaults.buttonColors(Color.Transparent)
                 ) {
+                    val timerIcon = when (timerState) {
+                        0 -> Icons.Default.TimerOff
+                        1 -> Icons.Default.Timer3Select
+                        2 -> Icons.Default.Timer10Select
+                        else -> Icons.Default.TimerOff
+                    }
                     Icon(
-                        imageVector = Icons.Default.Settings,
+                        imageVector = timerIcon,
                         contentDescription = null,
                         modifier = Modifier.size(40.dp),
                         tint = Color(0XFF330066),
@@ -308,7 +318,7 @@ private fun CameraContent() {
                     },
                     modifier = Modifier
                         .background(Color.Transparent)
-                        .offset(x = 200.dp, y = 1.dp)
+                        .offset(x = 250.dp, y = 1.dp)
                         .size(with(LocalDensity.current) { 100.dp }),
                     colors = ButtonDefaults.buttonColors(Color.Transparent)
                 ) {
