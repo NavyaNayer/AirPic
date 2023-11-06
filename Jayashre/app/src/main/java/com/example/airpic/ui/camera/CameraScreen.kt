@@ -47,7 +47,6 @@ import androidx.compose.material.icons.filled.TimerOff
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -85,7 +84,7 @@ enum class CameraMode {
 }
 
 private var recording: Recording? = null
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun CameraContent() {
     var cameraMode by remember { mutableStateOf(CameraMode.PHOTO) }
