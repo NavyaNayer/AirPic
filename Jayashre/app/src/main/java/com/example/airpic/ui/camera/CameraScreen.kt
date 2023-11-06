@@ -36,10 +36,14 @@ import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cameraswitch
+import androidx.compose.material.icons.filled.FlashOff
+import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -77,10 +81,12 @@ enum class CameraMode {
 }
 
 private var recording: Recording? = null
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun CameraContent() {
     var cameraMode by remember { mutableStateOf(CameraMode.PHOTO) }
+    var isTorchOn by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
@@ -96,7 +102,6 @@ private fun CameraContent() {
     val viewModel = viewModel<CameraViewModel>()
     val bitmaps by viewModel.bitmaps.collectAsState()
 
-
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
@@ -108,7 +113,7 @@ private fun CameraContent() {
                     .background(Color(0x80330066))
             )
         }
-    ) { padding ->
+    ) {padding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -190,11 +195,19 @@ private fun CameraContent() {
                 }
                 Button(
                     border = BorderStroke(4.dp, Color(0XFF330066)),
-                    colors = ButtonDefaults.buttonColors(if (cameraMode == CameraMode.VIDEO) Color(
-                        0XFFFF0000
-                    ) else Color(0XFFFFFFFF)),
+                    colors = ButtonDefaults.buttonColors(
+                        if (cameraMode == CameraMode.VIDEO) Color(
+                            0XFFFF0000
+                        ) else Color(0XFFFFFFFF)
+                    ),
                     onClick = {
-                        decideCameramode(context = context, controller = controller, onPhototaken = viewModel::onTakePhoto, cameraMode = cameraMode, contentResolver = contentResolver)
+                        decideCameramode(
+                            context = context,
+                            controller = controller,
+                            onPhototaken = viewModel::onTakePhoto,
+                            cameraMode = cameraMode,
+                            contentResolver = contentResolver
+                        )
                     },
                     modifier = Modifier
                         .size(with(LocalDensity.current) { 100.dp })
@@ -216,6 +229,94 @@ private fun CameraContent() {
                         contentDescription = "Switch camera",
                         modifier = Modifier.size(105.dp),
                         tint = Color(0XFFFFFFFF)
+                    )
+                }
+            }
+        }
+        Box (
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.TopEnd
+        ) {
+            Box (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .background(Color(0x80f5f5f5))
+            ) {
+                Button(
+                    onClick = {
+                        Log.d("CameraScreen", "Settings button clicked")
+                    },
+                    modifier = Modifier
+                        .background(Color.Transparent)
+                        .offset(x = -(5.dp), y = 1.dp)
+                        .size(with(LocalDensity.current) { 100.dp }),
+                    colors = ButtonDefaults.buttonColors(Color.Transparent)
+
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = Color(0XFF330066),
+                    )
+                }
+
+                Button (
+                    onClick = {
+                        isTorchOn = !isTorchOn
+                        if (isTorchOn) controller.enableTorch(true)
+                        else controller.enableTorch(false)
+                    },
+                    modifier = Modifier
+                        .background(Color.Transparent)
+                        .offset(x = 50.dp, y = 1.dp)
+                        .size(with(LocalDensity.current) { 100.dp }),
+                    colors = ButtonDefaults.buttonColors(Color.Transparent)
+                ) {
+                    Icon(
+                        imageVector = if (isTorchOn) Icons.Default.FlashOn
+                        else Icons.Default.FlashOff,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = Color(0XFF330066),
+                    )
+                }
+
+                Button (
+                    onClick = {
+                        Log.d("CameraScreen", "Settings button clicked")
+                    },
+                    modifier = Modifier
+                        .background(Color.Transparent)
+                        .offset(x = 150.dp, y = 1.dp)
+                        .size(with(LocalDensity.current) { 100.dp }),
+                    colors = ButtonDefaults.buttonColors(Color.Transparent)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = Color(0XFF330066),
+                    )
+                }
+
+                Button (
+                    onClick = {
+                        Log.d("CameraScreen", "Settings button clicked")
+                    },
+                    modifier = Modifier
+                        .background(Color.Transparent)
+                        .offset(x = 200.dp, y = 1.dp)
+                        .size(with(LocalDensity.current) { 100.dp }),
+                    colors = ButtonDefaults.buttonColors(Color.Transparent)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = Color(0XFF330066),
                     )
                 }
             }
@@ -296,7 +397,7 @@ private fun takePhoto(
     controller: LifecycleCameraController,
     onPhotoTaken: (Bitmap) -> Unit,
     contentResolver: ContentResolver
-) {
+) {/*
     val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.UK)
         .format(System.currentTimeMillis())
     val contentValues = ContentValues().apply {
@@ -310,7 +411,7 @@ private fun takePhoto(
         .Builder(contentResolver,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             contentValues)
-        .build()
+        .build() */
 
     controller.takePicture(
         ContextCompat.getMainExecutor(context),
