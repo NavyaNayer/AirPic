@@ -7,6 +7,7 @@ Tasks that need to be done
 - Add Functionality to Settings Button
 - Add a Screen to Settings Button Functionality
 - Add Funtionality to Gesture Button
+- Stopping Button for Video Capture
 - Adding Functionality to Timer Button
 - Swiping right and left to access filters (from any mode)
 - Video timer going on
@@ -25,7 +26,7 @@ Optional: Add Women Engineers Program Icon for a overall filter and for an ar fi
 Optional: Add SNU, Gitam and Amity University Icons for overall filters and for an ar filter
 
 
-New Completed Tasks
+Completed Tasks
 - Built a basic Camera App
 - Built the Logo for app
 - Built the Splash Screen using SplashScreen API
@@ -70,9 +71,6 @@ New Completed Tasks
     - gesture off icon to gesture on icon (dark violet to yellow)
     - gesture on icon to gesture off icon (yellow to dark violet)
 
-
-Old Completed Tasks (needs to be revisited again):
-- Also created xml file for stopping button
 
 
 Additional Tasks:
