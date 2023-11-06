@@ -81,6 +81,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("com.google.android.material:material:1.9.0")
+    implementation ("io.coil-kt:coil-compose:1.4.0")
     implementation("com.google.ar.sceneform:filament-android:1.17.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
