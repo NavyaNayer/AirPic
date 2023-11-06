@@ -5,7 +5,6 @@ Learning OpenGL Es for creating overall filter
 
 Tasks that need to be done
 - Should change the color of the flip camera button to dark violet
-- Should change the color of the gallery button to dark violet
 - Should change the color of the shutter button to white button
 - Should add a background aura of dark violet to the shutter button (in both video and photo mode)
 - Should add red color to the shutter button (inside of white) in video mode
@@ -50,6 +49,7 @@ New Completed Tasks
 - Developed the Camera Mode logic for shutter Button
 - Developed BottomScaffold for the gallery button
     - Pictures are arranged in the column of two
+- Changed the background color of the gallery button to dark violet and its icon color to white
 
 
 Old Completed Tasks (needs to be revisited again):
