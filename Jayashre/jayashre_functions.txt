@@ -4,9 +4,6 @@ Learning Kotlin
 Learning OpenGL Es for creating overall filter
 
 Tasks that need to be done
-- Should change the color of the shutter button to white button
-- Should add a background aura of dark violet to the shutter button (in both video and photo mode)
-- Should add red color to the shutter button (inside of white) in video mode
 - Add Function to Shutter Button (Video)
 - Add Functionality to Settings Button
 - Add Functionality to Flash Button - Not Working
@@ -45,11 +42,14 @@ New Completed Tasks
 - Developed a box of transparent white in the bottom
     - Developed three buttons at the bottom: Gallery Button, Shutter Button and Flip Camera Button
 - Developed the Flip Camera Logic
-- Developed the Camera Mode logic for shutter Button
+- Added Camera Mode Functionality to the SHutter button
 - Developed BottomScaffold for the gallery button
     - Pictures are arranged in the column of two
 - Changed the background color of the gallery button to dark violet and its icon color to white
 - Changed the background color of the flip camera button to dark violet and its icon color to white
+- Added Purple Aura to the shutter button
+    - Button has white color when photo mode is clicked
+    - Button has red color when video mode is clicked
 
 
 Old Completed Tasks (needs to be revisited again):
@@ -58,7 +58,6 @@ Old Completed Tasks (needs to be revisited again):
 - Added Three Buttons with a box background at bottom end (via an xml file ,using Relative Layout)
     - For this, created xml file purple background circle, gallery icon, flip camera icon, purple_outline circle and white shutter Button
 - Also created xml file for stopping button
-- Added Functionality to the Shutter (Photo)
 - Added Logic for changing flash icon:
        - flash off icon to flash on icon
        - flash on icon to flash off icon
@@ -72,16 +71,6 @@ Old Completed Tasks (needs to be revisited again):
     - gesture off icon to gesture on icon
     - gesture on icon to gesture off icon
     - For this: added yellow hand gesture and normal hand gesture hand icon
-- Added Logic for changing color for bg and text in mode buttons:
-      - default photo mode - purple bg with white text
-      - if video mode clicked:
-           - video mode's bg should be purple and text should be white
-           - photo mode's bg is white and text is black
-      - if photo mode clicked:
-           - photo mode's bg should be purple and text should be white
-           - video mode's bg is white and text is black
-- Added Logic for When Video Mode Button is clicked - Implement different shutter Icon (same goes to Photo Mode)
-    - For this:  created xml file for video shutter button (red)
 
 
 Additional Tasks:
