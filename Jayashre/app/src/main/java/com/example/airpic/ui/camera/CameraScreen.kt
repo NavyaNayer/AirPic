@@ -155,10 +155,12 @@ private fun CameraContent() {
                     .background(Color(0x80FFFFFF))
             ) {
                 Button(
+                    colors = ButtonDefaults.buttonColors(Color(0XFF330066)),
                     onClick = {
                         scope.launch {
                             scaffoldState.bottomSheetState.expand()
                         }
+
                     },
                     modifier = Modifier
                         .size(with(LocalDensity.current) { 90.dp })
@@ -167,7 +169,8 @@ private fun CameraContent() {
                     Icon(
                         imageVector = Icons.Default.PhotoLibrary,
                         contentDescription = null,
-                        modifier = Modifier.size(75.dp)
+                        modifier = Modifier.size(75.dp),
+                        tint = Color(0XFFFFFFFF)
                     )
                 }
                 Button(
