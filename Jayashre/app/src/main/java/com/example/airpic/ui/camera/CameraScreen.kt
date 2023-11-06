@@ -81,6 +81,7 @@ private fun CameraContent() {
     val viewModel = viewModel<CameraViewModel>()
     val bitmaps by viewModel.bitmaps.collectAsState()
 
+
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
@@ -105,88 +106,95 @@ private fun CameraContent() {
                     .fillMaxSize()
             )
             Button(
-                onClick = { cameraMode = CameraMode.PHOTO
-                    Log.d("CameraScreen", "Photo button clicked") },
+                onClick = {
+                    cameraMode = CameraMode.PHOTO
+                    Log.d("CameraScreen", "Photo button clicked")
+                },
                 modifier = Modifier
                     .background(Color.Transparent)
-                    .offset(x = -(210.dp), y = -(215.dp))
+                    .offset(x = -(210.dp), y = -(225.dp))
                     .clip(RoundedCornerShape(5.dp)),
-                colors = ButtonDefaults.buttonColors(if (cameraMode == CameraMode.PHOTO) Color(0x80330066) else Color(0x80FDFEFF))
+                colors = ButtonDefaults.buttonColors(
+                    if (cameraMode == CameraMode.PHOTO) Color(
+                        0x80330066
+                    ) else Color(0x80FDFEFF)
+                )
 
             ) {
-                Text("Photo",
-                    color = if (cameraMode == CameraMode.PHOTO) Color(0XFFFDFEFF) else Color.Black)
+                Text(
+                    "Photo",
+                    color = if (cameraMode == CameraMode.PHOTO) Color(0XFFFDFEFF) else Color.Black
+                )
             }
+            Button(
+                onClick = {
+                    cameraMode = CameraMode.VIDEO
+                    Log.d("CameraScreen", "Video button clicked")
+                },
+                modifier = Modifier
+                    .background(Color.Transparent)
+                    .offset(x = -(115.dp), y = -(225.dp))
+                    .clip(RoundedCornerShape(5.dp)),
+                colors = ButtonDefaults.buttonColors(
+                    if (cameraMode == CameraMode.VIDEO) Color(
+                        0x80330066
+                    ) else Color(0x80FDFEFF)
+                )
+
+            ) {
+                Text(
+                    "Video",
+                    color = if (cameraMode == CameraMode.VIDEO) Color(0XFFFDFEFF) else Color.Black
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .background(Color(0x80FFFFFF))
+            ) {
                 Button(
-                    onClick = { cameraMode = CameraMode.VIDEO
-                        Log.d("CameraScreen", "Video button clicked") },
+                    onClick = {
+                        scope.launch {
+                            scaffoldState.bottomSheetState.expand()
+                        }
+                    },
                     modifier = Modifier
-                        .background(Color.Transparent)
-                        .offset(x = -(115.dp), y = -(215.dp))
-                        .clip(RoundedCornerShape(5.dp)),
-                    colors = ButtonDefaults.buttonColors(if (cameraMode == CameraMode.VIDEO) Color(0x80330066) else Color(0x80FDFEFF))
-
+                        .size(with(LocalDensity.current) { 90.dp })
+                        .offset(x = 30.dp, y = 60.dp),
                 ) {
-                    Text("Video",
-                        color = if (cameraMode == CameraMode.VIDEO) Color(0XFFFDFEFF) else Color.Black)
+                    Icon(
+                        imageVector = Icons.Default.PhotoLibrary,
+                        contentDescription = null,
+                        modifier = Modifier.size(75.dp)
+                    )
                 }
-
-                Box (
+                Button(
+                    onClick = {
+                        decideCameramode(context = context, controller = controller, onPhototaken = viewModel::onTakePhoto, cameraMode = cameraMode)
+                    },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(215.dp)
-                        .background(Color.Transparent)
-                ){
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                scaffoldState.bottomSheetState.expand()
-                            }
-                        },
-                        modifier = Modifier
-                            .size(with(LocalDensity.current) { 70.dp })
-                            .offset(x = 40.dp, y = 75.dp),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.PhotoLibrary,
-                            contentDescription = null,
-                            modifier = Modifier.size(32.dp)
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            takePhoto(
-                                context = context,
-                                controller = controller,
-                                onPhotoTaken = viewModel::onTakePhoto
-                            )
-                        },
-                        modifier = Modifier
-                            .size(with(LocalDensity.current) { 100.dp })
-                            .offset(x = 155.dp, y = 55.dp),
-                    ) {
-
-                    }
-
-                    Button(
-                        onClick = {
-                            toggleCamera(controller)
-                        },
-                        modifier = Modifier
-                            .size(with(LocalDensity.current) { 70.dp })
-                            .offset(x = (300.dp), y = 75.dp),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Cameraswitch,
-                            contentDescription = "Switch camera",
-                            modifier = Modifier.size(75.dp)
-                        )
-                    }
+                        .size(with(LocalDensity.current) { 100.dp })
+                        .offset(x = 155.dp, y = 47.dp),
+                ) {
                 }
 
-
-
-
+                Button(
+                    onClick = {
+                        toggleCamera(controller)
+                    },
+                    modifier = Modifier
+                        .size(with(LocalDensity.current) { 90.dp })
+                        .offset(x = (290.dp), y = 60.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Cameraswitch,
+                        contentDescription = "Switch camera",
+                        modifier = Modifier.size(100.dp)
+                    )
+                }
+            }
 
 
             /*
@@ -243,12 +251,23 @@ private fun CameraContent() {
                             )
                         }
                     }*/
-            }
         }
-        }
+    }
+
+}
 
 
+private fun decideCameramode(context: Context, controller: LifecycleCameraController, onPhototaken: (Bitmap) -> Unit, cameraMode: CameraMode) {
+    when (cameraMode) {
+        CameraMode.PHOTO -> takePhoto(
+            context = context,
+            controller = controller,
+            onPhotoTaken = onPhototaken
+        )
 
+        CameraMode.VIDEO -> captureVideo()
+    }
+}
 private fun toggleCamera (controller: LifecycleCameraController) {
     controller.cameraSelector =
         if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
