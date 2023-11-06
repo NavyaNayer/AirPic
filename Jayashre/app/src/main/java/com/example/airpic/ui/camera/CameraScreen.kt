@@ -12,6 +12,7 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -163,7 +164,7 @@ private fun CameraContent() {
 
                     },
                     modifier = Modifier
-                        .size(with(LocalDensity.current) { 90.dp })
+                        .size(with(LocalDensity.current) { 80.dp })
                         .offset(x = 30.dp, y = 60.dp),
                 ) {
                     Icon(
@@ -174,6 +175,10 @@ private fun CameraContent() {
                     )
                 }
                 Button(
+                    border = BorderStroke(4.dp, Color(0XFF330066)),
+                    colors = ButtonDefaults.buttonColors(if (cameraMode == CameraMode.VIDEO) Color(
+                        0XFFFF0000
+                    ) else Color(0XFFFFFFFF)),
                     onClick = {
                         decideCameramode(context = context, controller = controller, onPhototaken = viewModel::onTakePhoto, cameraMode = cameraMode)
                     },
@@ -189,8 +194,8 @@ private fun CameraContent() {
                         toggleCamera(controller)
                     },
                     modifier = Modifier
-                        .size(with(LocalDensity.current) { 90.dp })
-                        .offset(x = (290.dp), y = 60.dp),
+                        .size(with(LocalDensity.current) { 80.dp })
+                        .offset(x = (300.dp), y = 60.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Cameraswitch,
