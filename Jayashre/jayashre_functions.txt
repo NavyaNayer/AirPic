@@ -4,8 +4,12 @@ Learning Kotlin
 Learning OpenGL Es for creating overall filter
 
 Tasks that need to be done
+- Should change the color of the flip camera button to dark violet
+- Should change the color of the gallery button to dark violet
+- Should change the color of the shutter button to white button
+- Should add a background aura of dark violet to the shutter button (in both video and photo mode)
+- Should add red color to the shutter button (inside of white) in video mode
 - Add Function to Shutter Button (Video)
-- Add Functionality to Gallery Button
 - Add Functionality to Settings Button
 - Add Functionality to Flash Button - Not Working
 - Add Funtionality to Gesture Button
@@ -26,8 +30,8 @@ Optional: Add Women Engineers Program Icon for a overall filter and for an ar fi
 Optional: Add SNU, Gitam and Amity University Icons for overall filters and for an ar filter
 
 
-Completed Tasks:
-- Built a basic camera app (for practice purposes)
+New Completed Tasks
+- Built a basic Camera App
 - Built the Logo for app
 - Built the Splash Screen using SplashScreen API
 - Built the Camera Permission Screen
@@ -36,14 +40,24 @@ Completed Tasks:
     - For this: Added Whole XML Layout Screen, Audio Icon XML File
 - Built Mainframe as the Camera Frame (using CameraX Camera Controller Library)
 - Pinch Zooming is Working (comes with CameraX)
+- Started using Jetpack Compose for UI
+- Create Photo and Video Mode Buttons
+    - Developed the logic of changing the background of the buttons, when the mode button is clicked
+    - Corresponding the function of the mode is implemented in the button (without any physical changes to the shutter button)
+- Developed a box of transparent white in the bottom
+    - Developed three buttons at the bottom: Gallery Button, Shutter Button and Flip Camera Button
+- Developed the Flip Camera Logic
+- Developed the Camera Mode logic for shutter Button
+- Developed BottomScaffold for the gallery button
+    - Pictures are arranged in the column of two
+
+
+Old Completed Tasks (needs to be revisited again):
 - Added Four Buttons on the top with transparent box (via an xml file, using Relative Layout and Linear Layout)
     - For this, created xml for settings icon, flash on icon, flash off icon , hand gesture on icon and hand gesture off icon
 - Added Three Buttons with a box background at bottom end (via an xml file ,using Relative Layout)
     - For this, created xml file purple background circle, gallery icon, flip camera icon, purple_outline circle and white shutter Button
 - Also created xml file for stopping button
-- Added Photo And Video Mode Button
-    - For this, created xml file for purple rounded corner button and white rounded corner button 
-- Added Functionality to the Flip Camera
 - Added Functionality to the Shutter (Photo)
 - Added Logic for changing flash icon:
        - flash off icon to flash on icon
@@ -76,3 +90,5 @@ Additional Tasks:
 - Face Smile Detection model
 - Twitching Hands Model 
 - How to use those codes in Kotlin
+- How to link the app with gallery (so that it doesnt get removed everytime i close my app) [able to see photos in gallery]
+- To able to click the photos and videos (in the gallery)
