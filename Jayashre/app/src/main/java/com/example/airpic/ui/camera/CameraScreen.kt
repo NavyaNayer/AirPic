@@ -230,7 +230,8 @@ private fun decideCameramode(context: Context, controller: LifecycleCameraContro
         CameraMode.PHOTO -> takePhoto(
             context = context,
             controller = controller,
-            onPhotoTaken = onPhototaken
+            onPhotoTaken = onPhototaken,
+            contentResolver = contentResolver
         )
 
         CameraMode.VIDEO -> captureVideo(controller, context, contentResolver)
@@ -293,8 +294,24 @@ private fun captureVideo(controller: LifecycleCameraController, context: Context
 private fun takePhoto(
     context: Context,
     controller: LifecycleCameraController,
-    onPhotoTaken: (Bitmap) -> Unit
+    onPhotoTaken: (Bitmap) -> Unit,
+    contentResolver: ContentResolver
 ) {
+    val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.UK)
+        .format(System.currentTimeMillis())
+    val contentValues = ContentValues().apply {
+        put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+        put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/AirPic")
+        }
+    }
+    val outputOptions = ImageCapture.OutputFileOptions
+        .Builder(contentResolver,
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            contentValues)
+        .build()
+
     controller.takePicture(
         ContextCompat.getMainExecutor(context),
         object : ImageCapture.OnImageCapturedCallback() {
@@ -315,6 +332,8 @@ private fun takePhoto(
                 )
 
                 onPhotoTaken(rotatedBitmap)
+
+
             }
 
             override fun onError(exception: ImageCaptureException) {
