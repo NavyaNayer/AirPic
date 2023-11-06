@@ -38,6 +38,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
+import androidx.compose.material.icons.filled.FrontHand
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Timer10Select
@@ -90,6 +91,7 @@ private fun CameraContent() {
     var cameraMode by remember { mutableStateOf(CameraMode.PHOTO) }
     var isTorchOn by remember { mutableStateOf(false) }
     var timerState by remember { mutableStateOf(0) }
+    var isGestureOn by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
@@ -253,7 +255,7 @@ private fun CameraContent() {
                     },
                     modifier = Modifier
                         .background(Color.Transparent)
-                        .offset(x = -(5.dp), y = 1.dp)
+                        .offset(x = 10.dp, y = 1.dp)
                         .size(with(LocalDensity.current) { 100.dp }),
                     colors = ButtonDefaults.buttonColors(Color.Transparent)
 
@@ -274,7 +276,7 @@ private fun CameraContent() {
                     },
                     modifier = Modifier
                         .background(Color.Transparent)
-                        .offset(x = 50.dp, y = 1.dp)
+                        .offset(x = 105.dp, y = 1.dp)
                         .size(with(LocalDensity.current) { 100.dp }),
                     colors = ButtonDefaults.buttonColors(Color.Transparent)
                 ) {
@@ -290,11 +292,10 @@ private fun CameraContent() {
                 Button (
                     onClick = {
                         timerState = (timerState + 1) % 3
-                        Log.d("CameraScreen", "Timer state changed to $timerState")
                     },
                     modifier = Modifier
                         .background(Color.Transparent)
-                        .offset(x = 150.dp, y = 1.dp)
+                        .offset(x = 200.dp, y = 1.dp)
                         .size(with(LocalDensity.current) { 100.dp }),
                     colors = ButtonDefaults.buttonColors(Color.Transparent)
                 ) {
@@ -314,19 +315,20 @@ private fun CameraContent() {
 
                 Button (
                     onClick = {
-                        Log.d("CameraScreen", "Settings button clicked")
+                        isGestureOn = !isGestureOn
                     },
                     modifier = Modifier
                         .background(Color.Transparent)
-                        .offset(x = 250.dp, y = 1.dp)
+                        .offset(x = 295.dp, y = 1.dp)
                         .size(with(LocalDensity.current) { 100.dp }),
                     colors = ButtonDefaults.buttonColors(Color.Transparent)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Settings,
+                        imageVector = Icons.Default.FrontHand,
                         contentDescription = null,
                         modifier = Modifier.size(40.dp),
-                        tint = Color(0XFF330066),
+                        tint = if (isGestureOn) Color(0XFFFFFF00)
+                        else Color(0XFF330066),
                     )
                 }
             }
