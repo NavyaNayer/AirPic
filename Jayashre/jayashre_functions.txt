@@ -5,8 +5,8 @@ Learning OpenGL Es for creating overall filter
 
 Tasks that need to be done
 - Add Functionality to Settings Button
+- - Add a Screen to Settings Button Functionality
 - Add Funtionality to Gesture Button
-- Add a Screen to Settings Button Functionality
 - Adding Functionality to Timer Button
 - Swiping right and left to access filters (from any mode)
 - Video timer going on
@@ -60,16 +60,15 @@ New Completed Tasks
 - Added Logic for changing flash icon:
          - flash off icon to flash on icon (icon)
          - flash on icon to flash off icon (icon)
-
-
-Old Completed Tasks (needs to be revisited again):
-- Also created xml file for stopping button
+- Added Timer Button at the top
 - Added Logic for changing timer icon:
        - timer icon to 3 sec icon
        - 3 sec icon to 10 sec icon
        - 10 sec icon to timer icon
-   - For this :
-       - Added 3 sec and 10 sec icons xml
+
+
+Old Completed Tasks (needs to be revisited again):
+- Also created xml file for stopping button
 - Added Logic for changing gesture icon:
     - gesture off icon to gesture on icon
     - gesture on icon to gesture off icon
