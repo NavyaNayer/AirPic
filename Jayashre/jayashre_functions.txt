@@ -7,6 +7,8 @@ Tasks that need to be done
 - Add Functionality to Settings Button
 - Add a Screen to Settings Button Functionality
 - Add Funtionality to Gesture Button
+- Adding Pause Button to Video
+- Adding REsume Button to Video Mode
 - Stopping Button for Video Capture
 - Adding Functionality to Timer Button
 - Swiping right and left to access filters (from any mode)
@@ -14,6 +16,7 @@ Tasks that need to be done
 - Adding animation to Shutter Button (when it is clicked)
 - Images to be saved in media
 - Videos to be saved in GAllery APp
+- Changing the shutter icon (to XML)
 
 
 
