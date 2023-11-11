@@ -52,6 +52,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -84,12 +85,15 @@ enum class CameraMode {
 }
 
 private var recording: Recording? = null
+//private var frameBitmap: Bitmap? = null
+
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun CameraContent() {
     var cameraMode by remember { mutableStateOf(CameraMode.PHOTO) }
     var isTorchOn by remember { mutableStateOf(false) }
-    var timerState by remember { mutableStateOf(0) }
+    var timerState by remember { mutableIntStateOf(0) }
     var isGestureOn by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -105,6 +109,7 @@ private fun CameraContent() {
     }
     val viewModel = viewModel<CameraViewModel>()
     val bitmaps by viewModel.bitmaps.collectAsState()
+    //val model = SmileDetectionModel.newInstance(context)
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -407,7 +412,7 @@ private fun takePhoto(
     context: Context,
     controller: LifecycleCameraController,
     onPhotoTaken: (Bitmap) -> Unit,
-    contentResolver: ContentResolver
+    contentResolver: ContentResolver,
 ) {/*
     val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.UK)
         .format(System.currentTimeMillis())
@@ -446,6 +451,7 @@ private fun takePhoto(
                 onPhotoTaken(rotatedBitmap)
 
 
+
             }
 
             override fun onError(exception: ImageCaptureException) {
@@ -459,6 +465,25 @@ private fun takePhoto(
         }
     )
 }
+
+
+
+
+/*
+val model = SmileDetectionModel.newInstance(context)
+
+// Creates inputs for reference.
+val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 100, 100, 3), DataType.FLOAT32)
+inputFeature0.loadBuffer(byteBuffer)
+
+// Runs model inference and gets result.
+val outputs = model.process(inputFeature0)
+val outputFeature0 = outputs.outputFeature0AsTensorBuffer
+
+// Releases model resources if no longer used.
+model.close()
+*
+*/
 
 
 
