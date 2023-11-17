@@ -37,6 +37,7 @@ Completed Tasks
     - For this: Added Whole XML Layout Screen, Camera Icon XML File, Rounded Button XML File
 - Built the Audio Permission Screen
     - For this: Added Whole XML Layout Screen, Audio Icon XML File
+- Added App Navigation Function that navigates to the fragements in the app
 - Built Mainframe as the Camera Frame (using CameraX Camera Controller Library)
 - Pinch Zooming is Working (comes with CameraX)
 - Started using Jetpack Compose for UI
@@ -59,6 +60,7 @@ Completed Tasks
 - In Video Mode, the videos can be viewd only by the media gallery
 - Added Four Buttons on the top with translucent white box
 - Added Information button with transparent bg and dark violet icon
+- Added Fragment file for Information Frame
 - Added flash button with transparent bg and dark violet icon
 - Added Functionality to the flash button
 - Added Logic for changing flash icon:
