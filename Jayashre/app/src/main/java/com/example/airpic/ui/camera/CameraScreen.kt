@@ -39,6 +39,7 @@ import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.FrontHand
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Timer10Select
@@ -255,7 +256,7 @@ private fun CameraContent() {
             ) {
                 Button(
                     onClick = {
-                        Log.d("CameraScreen", "Settings button clicked")
+                        Log.d("CameraScreen", "Info Button")
                     },
                     modifier = Modifier
                         .background(Color.Transparent)
@@ -265,7 +266,7 @@ private fun CameraContent() {
 
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Settings,
+                        imageVector = Icons.Default.Info,
                         contentDescription = null,
                         modifier = Modifier.size(40.dp),
                         tint = Color(0XFF330066),
