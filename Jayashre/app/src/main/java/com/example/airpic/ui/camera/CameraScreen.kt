@@ -41,7 +41,6 @@ import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.FrontHand
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PhotoLibrary
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Timer10Select
 import androidx.compose.material.icons.filled.Timer3Select
 import androidx.compose.material.icons.filled.TimerOff
@@ -68,6 +67,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -75,9 +78,9 @@ import java.util.Locale
 
 @Composable
 fun CameraScreen (
-    viewModel: CameraViewModel = viewModel()
+    navController: NavController? = null
 ) {
-    CameraContent()
+    CameraContent(navController)
 }
 
 enum class CameraMode {
@@ -91,7 +94,8 @@ private var recording: Recording? = null
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun CameraContent() {
+private fun CameraContent(navController: NavController?) {
+
     var cameraMode by remember { mutableStateOf(CameraMode.PHOTO) }
     var isTorchOn by remember { mutableStateOf(false) }
     var timerState by remember { mutableIntStateOf(0) }
@@ -256,6 +260,7 @@ private fun CameraContent() {
             ) {
                 Button(
                     onClick = {
+                        navController?.navigate("infoFragment")
                         Log.d("CameraScreen", "Info Button")
                     },
                     modifier = Modifier
@@ -338,7 +343,11 @@ private fun CameraContent() {
                 }
             }
         }
+
     }
+
+
+
 
 }
 
@@ -494,5 +503,5 @@ model.close()
 @Preview
 @Composable
 private fun Preview_CameraContent() {
-    CameraContent()
+    CameraContent(navController = null)
 }
