@@ -4,18 +4,18 @@ Learning Kotlin
 Learning OpenGL Es for creating overall filter
 
 Tasks that need to be done
-- Add Functionality to Settings Button
+- Add Functionality to Information Button
 - Add a Screen to Settings Button Functionality
-- Add Funtionality to Gesture Button
+- Add Functionality to Gesture Button
 - Adding Pause Button to Video
-- Adding REsume Button to Video Mode
+- Adding Resume Button to Video Mode
 - Stopping Button for Video Capture
 - Adding Functionality to Timer Button
 - Swiping right and left to access filters (from any mode)
 - Video timer going on
 - Adding animation to Shutter Button (when it is clicked)
 - Images to be saved in media
-- Videos to be saved in GAllery APp
+- Videos to be saved in Gallery App
 - Changing the shutter icon (to XML)
 
 
@@ -58,7 +58,7 @@ Completed Tasks
 - In Photo Mode, the images can be viewed only by the gallery option provided
 - In Video Mode, the videos can be viewd only by the media gallery
 - Added Four Buttons on the top with translucent white box
-- Added Settings button with transparent bg and dark violet icon
+- Added Information button with transparent bg and dark violet icon
 - Added flash button with transparent bg and dark violet icon
 - Added Functionality to the flash button
 - Added Logic for changing flash icon:
