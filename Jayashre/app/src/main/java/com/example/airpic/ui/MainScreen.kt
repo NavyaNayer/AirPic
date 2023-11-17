@@ -2,6 +2,7 @@ package com.example.airpic.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.airpic.ui.camera.AppNavigation
 import com.example.airpic.ui.camera.CameraScreen
 import com.example.airpic.ui.no_permission.NoAudioPermissionScreen
 import com.example.airpic.ui.no_permission.NoPermissionScreen
@@ -34,7 +35,7 @@ private fun MainContent(
 ) {
 
     if (hasCameraPermission && hasAudioPermission) {
-        CameraScreen()
+        AppNavigation()
     } else {
         if(!hasCameraPermission){
             NoPermissionScreen(onRequestCameraPermission)
