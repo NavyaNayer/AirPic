@@ -71,6 +71,7 @@ dependencies {
     implementation ("androidx.compose.foundation:foundation:1.5.1")
     implementation("androidx.compose.animation:animation:1.5.1")
     implementation("androidx.navigation:navigation-compose:2.7.2")
+    implementation("androidx.navigation:navigation-fragment-compose:2.7.0-alpha02")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("androidx.camera:camera-video:1.2.3")
