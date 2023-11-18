@@ -64,7 +64,7 @@ fun InfoScreen(navController: NavController) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Going to Main Frame",
-                            tint = Color.White
+                            tint = Color.White,
                         )
                     }
                 },
