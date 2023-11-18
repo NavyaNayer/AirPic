@@ -13,6 +13,8 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,10 +32,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.airpic.R
 
 //navController.navigateUp()
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +56,7 @@ fun InfoScreen(navController: NavController) {
                 ),
                 title = {
                     Text(
-                        "About AirPic",
+                        "About",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,
@@ -86,12 +91,27 @@ fun InfoContent(innerPadding: PaddingValues) {
             .background(Color(0XFFccc2Dc)),
         contentAlignment = Alignment.Center
     ) {
-        Button(
-            onClick = {
+        Image (
+            painter = painterResource(id = R.drawable.animation_one),
+            contentDescription = null,
+            modifier = Modifier
+                .size(150.dp)
+                .offset(y = -(250.dp))
+        );
+        Text(
+            text = "AirPic",
+            fontSize = 50.sp,
+            modifier = Modifier.offset(y = -(125.dp)),
+            color = Color(0XFF330066),
+            fontFamily = FontFamily.Cursive
+        );
+        Text("\n" +
+                "Welcome to AirPic, revolutionizing photo capture with an innovative gesture-powered experience." + "\n" +
+                "Say goodbye to complexity – effortlessly snap perfect shots with intuitive motions".trimIndent(),
+            color = Color.Black,
+            fontFamily = FontFamily.SansSerif,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.offset(y = -(35.dp)))
 
-            }
-        ) {
-            Text("Back to Camera")
-        }
     }
 }
