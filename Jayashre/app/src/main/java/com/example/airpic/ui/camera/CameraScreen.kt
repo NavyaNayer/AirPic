@@ -7,8 +7,6 @@ import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Matrix
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
@@ -16,7 +14,6 @@ import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.ImageProxy
 import androidx.camera.video.MediaStoreOutputOptions
 import androidx.camera.video.Recording
 import androidx.camera.video.VideoRecordEvent
@@ -219,7 +216,7 @@ private fun CameraContent(navController: NavController?) {
                 ) {
                     IconButton(
                         onClick = {
-                            decideCameramode(
+                            decideCameraMode(
                                 context = context,
                                 controller = controller,
                                 cameraMode = cameraMode,
@@ -240,7 +237,7 @@ private fun CameraContent(navController: NavController?) {
                             modifier = Modifier.size(100.dp),
                             tint = if (cameraMode == CameraMode.VIDEO) {
                                 if (isRecording.value) {
-                                    Color(0XFFCCC2DC)
+                                    Color(0xFF5c05b3)
                                 } else {
                                     Color.Red
                                 }
@@ -373,7 +370,7 @@ private fun CameraContent(navController: NavController?) {
 }
 
 
-private fun decideCameramode(context: Context, controller: LifecycleCameraController, cameraMode: CameraMode, contentResolver: ContentResolver, isRecording: MutableState<Boolean>) {
+private fun decideCameraMode(context: Context, controller: LifecycleCameraController, cameraMode: CameraMode, contentResolver: ContentResolver, isRecording: MutableState<Boolean>) {
     when (cameraMode) {
         CameraMode.PHOTO -> takePhoto(
             context = context,
