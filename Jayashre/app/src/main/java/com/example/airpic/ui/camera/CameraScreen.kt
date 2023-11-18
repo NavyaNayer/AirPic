@@ -5,6 +5,7 @@ package com.example.airpic.ui.camera
 import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
@@ -221,7 +222,6 @@ private fun CameraContent(navController: NavController?) {
                             decideCameramode(
                                 context = context,
                                 controller = controller,
-                                onPhototaken = viewModel::onTakePhoto,
                                 cameraMode = cameraMode,
                                 contentResolver = contentResolver,
                                 isRecording = isRecording
@@ -373,12 +373,11 @@ private fun CameraContent(navController: NavController?) {
 }
 
 
-private fun decideCameramode(context: Context, controller: LifecycleCameraController, onPhototaken: (Bitmap) -> Unit, cameraMode: CameraMode, contentResolver: ContentResolver, isRecording: MutableState<Boolean>) {
+private fun decideCameramode(context: Context, controller: LifecycleCameraController, cameraMode: CameraMode, contentResolver: ContentResolver, isRecording: MutableState<Boolean>) {
     when (cameraMode) {
         CameraMode.PHOTO -> takePhoto(
             context = context,
             controller = controller,
-            onPhotoTaken = onPhototaken,
             contentResolver = contentResolver
         )
 
@@ -445,9 +444,8 @@ private fun captureVideo(controller: LifecycleCameraController, context: Context
 private fun takePhoto(
     context: Context,
     controller: LifecycleCameraController,
-    onPhotoTaken: (Bitmap) -> Unit,
     contentResolver: ContentResolver,
-) {/*
+) {
     val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.UK)
         .format(System.currentTimeMillis())
     val contentValues = ContentValues().apply {
@@ -461,41 +459,21 @@ private fun takePhoto(
         .Builder(contentResolver,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             contentValues)
-        .build() */
+        .build()
 
     controller.takePicture(
+        outputOptions,
         ContextCompat.getMainExecutor(context),
-        object : ImageCapture.OnImageCapturedCallback() {
-            override fun onCaptureSuccess(image: ImageProxy) {
-                super.onCaptureSuccess(image)
-
-                val matrix = Matrix().apply {
-                    postRotate(image.imageInfo.rotationDegrees.toFloat())
-                }
-                val rotatedBitmap = Bitmap.createBitmap(
-                    image.toBitmap(),
-                    0,
-                    0,
-                    image.width,
-                    image.height,
-                    matrix,
-                    false
-                )
-
-                onPhotoTaken(rotatedBitmap)
-
-
-
+        object : ImageCapture.OnImageSavedCallback {
+            override fun onError(exc: ImageCaptureException) {
+                Log.e(TAG, "Photo capture failed: ${exc.message}",exc)
             }
 
-            override fun onError(exception: ImageCaptureException) {
-                super.onError(exception)
-                Toast.makeText(
-                    context,
-                    "Photo capture failed",
-                    Toast.LENGTH_LONG
-                ).show()
+            override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                val msg = "Photo captured: ${output.savedUri}"
+                Log.d(TAG,msg)
             }
+
         }
     )
 }
