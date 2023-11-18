@@ -10,8 +10,9 @@ Tasks that need to be done
 - Adding Functionality to Timer Button
 - Video timer going on
 - Adding animation to Shutter Button (when it is clicked)
-- Images to be saved in media
-- Videos to be saved in Gallery in App
+
+--Added to Future Scope
+- Images and Videos saved in Media Storage and are visible in the Gallery created inside the APP
 
 
 
