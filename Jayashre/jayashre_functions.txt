@@ -7,7 +7,6 @@ Tasks that need to be done
 - Add Functionality to Gesture Button
 - Adding Pause Button to Video
 - Adding Resume Button to Video Mode
-- Adding Functionality to Timer Button
 - Video timer going on
 - Adding animation to Shutter Button (when it is clicked)
 
@@ -67,6 +66,7 @@ Completed Tasks
          - flash off icon to flash on icon (icon)
          - flash on icon to flash off icon (icon)
 - Added Timer Button at the top, with transparent bg and dark violet icon
+- Added Box of Black Translucent to show the timer
 - Added Logic for changing timer icon:
        - timer icon to 3 sec icon
        - 3 sec icon to 10 sec icon

@@ -23,14 +23,18 @@ import androidx.camera.view.video.AudioConfig
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.IconButton
@@ -48,8 +52,12 @@ import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -67,10 +75,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.airpic.R
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -100,6 +111,10 @@ private fun CameraContent(navController: NavController?) {
     var cameraMode by remember { mutableStateOf(CameraMode.PHOTO) }
     var isTorchOn by remember { mutableStateOf(false) }
     var timerState by remember { mutableIntStateOf(0) }
+    var timerValue by remember { mutableStateOf(0) }
+    var isTimerActive by remember { mutableStateOf(false) }
+    var isCountdownFinished by remember { mutableStateOf(false) }
+    var isShutterButtonClicked by remember { mutableStateOf(false) }
     var isGestureOn by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -216,13 +231,18 @@ private fun CameraContent(navController: NavController?) {
                 ) {
                     IconButton(
                         onClick = {
-                            decideCameraMode(
-                                context = context,
-                                controller = controller,
-                                cameraMode = cameraMode,
-                                contentResolver = contentResolver,
-                                isRecording = isRecording
-                            )
+
+                            if (isTimerActive) {
+                                isShutterButtonClicked = true
+                            } else {
+                                decideCameraMode(
+                                    context = context,
+                                    controller = controller,
+                                    cameraMode = cameraMode,
+                                    contentResolver = contentResolver,
+                                    isRecording = isRecording
+                                )
+                            }
                         },
                         modifier = Modifier.size(100.dp)
                     ) {
@@ -296,7 +316,7 @@ private fun CameraContent(navController: NavController?) {
                     )
                 }
 
-                Button (
+                Button(
                     onClick = {
                         isTorchOn = !isTorchOn
                         if (isTorchOn) controller.enableTorch(true)
@@ -317,9 +337,16 @@ private fun CameraContent(navController: NavController?) {
                     )
                 }
 
-                Button (
+                Button(
                     onClick = {
                         timerState = (timerState + 1) % 3
+                        timerValue = when (timerState) {
+                            0 -> 0
+                            1 -> 3
+                            2 -> 10
+                            else -> 0
+                        }
+                        isTimerActive = timerValue > 0
                     },
                     modifier = Modifier
                         .background(Color.Transparent)
@@ -327,6 +354,7 @@ private fun CameraContent(navController: NavController?) {
                         .size(with(LocalDensity.current) { 100.dp }),
                     colors = ButtonDefaults.buttonColors(Color.Transparent)
                 ) {
+
                     val timerIcon = when (timerState) {
                         0 -> Icons.Default.TimerOff
                         1 -> Icons.Default.Timer3Select
@@ -341,7 +369,7 @@ private fun CameraContent(navController: NavController?) {
                     )
                 }
 
-                Button (
+                Button(
                     onClick = {
                         isGestureOn = !isGestureOn
                     },
@@ -362,7 +390,48 @@ private fun CameraContent(navController: NavController?) {
             }
         }
 
-    }
+        if (isTimerActive && isShutterButtonClicked) {
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xAA000000)),
+                contentAlignment = Alignment.Center
+            ) {
+
+                Text(
+                    text = timerValue.toString(),
+                    color = Color.White,
+                    style = LocalTextStyle.current.copy(fontSize = 50.sp)
+                )
+                LaunchedEffect(Unit) {
+
+                    for (count in timerValue downTo 2) {
+                        delay(1000)
+
+                        timerValue = count - 1
+                    }
+
+
+                    isCountdownFinished = true
+            }}
+        }
+
+        LaunchedEffect(isCountdownFinished) {
+            if (isCountdownFinished) {
+
+                decideCameraMode(
+                    context = context,
+                    controller = controller,
+                    cameraMode = cameraMode,
+                    contentResolver = contentResolver,
+                    isRecording = isRecording
+                )
+                isShutterButtonClicked = false
+                isCountdownFinished = false
+            }
+
+    }}
 
 
 
