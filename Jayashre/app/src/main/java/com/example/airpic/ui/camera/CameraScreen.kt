@@ -22,8 +22,8 @@ import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.video.AudioConfig
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,9 +31,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.FlashOff
@@ -50,6 +52,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -63,14 +66,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.example.airpic.R
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -89,6 +91,7 @@ enum class CameraMode {
 }
 
 private var recording: Recording? = null
+private var isRecording = mutableStateOf(false)
 //private var frameBitmap: Bitmap? = null
 
 
@@ -207,28 +210,46 @@ private fun CameraContent(navController: NavController?) {
                         tint = Color(0XFFFFFFFF)
                     )
                 }
-                Button(
-                    border = BorderStroke(4.dp, Color(0XFF330066)),
-                    colors = ButtonDefaults.buttonColors(
-                        if (cameraMode == CameraMode.VIDEO) Color(
-                            0XFFFF0000
-                        ) else Color(0XFFFFFFFF)
-                    ),
-                    onClick = {
-                        decideCameramode(
-                            context = context,
-                            controller = controller,
-                            onPhototaken = viewModel::onTakePhoto,
-                            cameraMode = cameraMode,
-                            contentResolver = contentResolver
-                        )
-                    },
+                Box(
                     modifier = Modifier
                         .size(with(LocalDensity.current) { 100.dp })
-                        .offset(x = 155.dp, y = 47.dp),
+                        .offset(x = 155.dp, y = 47.dp)
+                        .border(4.dp, Color(0xFF330066), shape = CircleShape)
                 ) {
+                    IconButton(
+                        onClick = {
+                            decideCameramode(
+                                context = context,
+                                controller = controller,
+                                onPhototaken = viewModel::onTakePhoto,
+                                cameraMode = cameraMode,
+                                contentResolver = contentResolver,
+                                isRecording = isRecording
+                            )
+                        },
+                        modifier = Modifier.size(100.dp)
+                    ) {
+                        val iconRes = if (cameraMode == CameraMode.VIDEO) {
+                            if (isRecording.value) R.drawable.ic_record_stop else R.drawable.ic_shutter
+                        } else {
+                            R.drawable.ic_shutter
+                        }
+                        Icon(
+                            painterResource(iconRes),
+                            contentDescription = null,
+                            modifier = Modifier.size(100.dp),
+                            tint = if (cameraMode == CameraMode.VIDEO) {
+                                if (isRecording.value) {
+                                    Color(0XFFCCC2DC)
+                                } else {
+                                    Color.Red
+                                }
+                            } else {
+                                Color.White
+                            }
+                                )
+                    }
                 }
-
                 Button(
                     colors = ButtonDefaults.buttonColors(Color(0XFF330066)),
                     onClick = {
@@ -352,7 +373,7 @@ private fun CameraContent(navController: NavController?) {
 }
 
 
-private fun decideCameramode(context: Context, controller: LifecycleCameraController, onPhototaken: (Bitmap) -> Unit, cameraMode: CameraMode, contentResolver: ContentResolver) {
+private fun decideCameramode(context: Context, controller: LifecycleCameraController, onPhototaken: (Bitmap) -> Unit, cameraMode: CameraMode, contentResolver: ContentResolver, isRecording: MutableState<Boolean>) {
     when (cameraMode) {
         CameraMode.PHOTO -> takePhoto(
             context = context,
@@ -361,7 +382,7 @@ private fun decideCameramode(context: Context, controller: LifecycleCameraContro
             contentResolver = contentResolver
         )
 
-        CameraMode.VIDEO -> captureVideo(controller, context, contentResolver)
+        CameraMode.VIDEO -> captureVideo(controller, context, contentResolver, isRecording)
     }
 }
 private fun toggleCamera (controller: LifecycleCameraController) {
@@ -373,11 +394,12 @@ private fun toggleCamera (controller: LifecycleCameraController) {
         }
 }
 @SuppressLint("MissingPermission")
-private fun captureVideo(controller: LifecycleCameraController, context: Context, contentResolver: ContentResolver) {
+private fun captureVideo(controller: LifecycleCameraController, context: Context, contentResolver: ContentResolver, isRecording: MutableState<Boolean>) {
 
     if (recording != null) {
         recording?.stop()
         recording = null
+        isRecording.value = false
         return
     }
     val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.UK)
@@ -413,10 +435,12 @@ private fun captureVideo(controller: LifecycleCameraController, context: Context
                         Toast.LENGTH_LONG
                     ).show()
                 }
+                isRecording.value = false
             }
         }
         Log.d("Video", "Captured Video")
     }
+    isRecording.value = true
 }
 private fun takePhoto(
     context: Context,
