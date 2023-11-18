@@ -4,16 +4,16 @@ import numpy as np
 
 cap = cv2.VideoCapture(0)
 facedetector = cv2.CascadeClassifier(
-    "C:\\Users\\jaya2\\AndroidStudioProjects\\airpic\\Jayashre\\models\\SmileDetection\\haarcascade_frontalface_default.xml"
+    "C:\\Users\\jaya2\\Visual Code\\AirPic\\Jayashre\\models\\SmileDetection\\haarcascade_frontalface_default.xml"
 )
 vwriter = cv2.VideoWriter("out.wmv", cv2.VideoWriter_fourcc(*"WMV1"), 20, (640, 480))
 model = tf.keras.models.load_model(
-    "C:\\Users\\jaya2\\AndroidStudioProjects\\airpic\\Jayashre\\models\\SmileDetection\\vgg_model_ft_one.h5"
+    "C:\\Users\\jaya2\\Visual Code\\AirPic\\Jayashre\\models\\SmileDetection\\vgg_model_ft_one.h5"
 )
 
 
 def detect_faces(image):
-    face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+    face_cascade = cv2.CascadeClassifier("C:\\Users\\jaya2\\Visual Code\\AirPic\\Jayashre\\models\\SmileDetection\\haarcascade_frontalface_default.xml")
     faces = face_cascade.detectMultiScale(
         image, scaleFactor=1.3, minNeighbors=5, minSize=(30, 30)
     )
