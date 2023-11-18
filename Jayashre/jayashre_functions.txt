@@ -7,14 +7,11 @@ Tasks that need to be done
 - Add Functionality to Gesture Button
 - Adding Pause Button to Video
 - Adding Resume Button to Video Mode
-- Stopping Button for Video Capture
 - Adding Functionality to Timer Button
-
 - Video timer going on
 - Adding animation to Shutter Button (when it is clicked)
 - Images to be saved in media
-- Videos to be saved in Gallery App
-- Changing the shutter icon (to XML)
+- Videos to be saved in Gallery in App
 
 
 
@@ -23,7 +20,7 @@ Implementation of OpenGL ES
 
 
 Optional: Have to work on training a model on swiping the overall filters from a far distance
-Optional: Add Women Engineers Program Icon for a overall filter and for an ar filte
+Optional: Add Women Engineers Program Icon for a overall filter and for an ar filter
 Optional: Add SNU, Gitam and Amity University Icons for overall filters and for an ar filter
 
 
@@ -35,7 +32,7 @@ Completed Tasks
     - For this: Added Whole XML Layout Screen, Camera Icon XML File, Rounded Button XML File
 - Built the Audio Permission Screen
     - For this: Added Whole XML Layout Screen, Audio Icon XML File
-- Added App Navigation Function that navigates to the fragements in the app
+- Added App Navigation Function that navigates to the fragments in the app
 - Built Mainframe as the Camera Frame (using CameraX Camera Controller Library)
 - Pinch Zooming is Working (comes with CameraX)
 - Started using Jetpack Compose for UI
@@ -45,17 +42,21 @@ Completed Tasks
 - Developed a box of transparent white in the bottom
     - Developed three buttons at the bottom: Gallery Button, Shutter Button and Flip Camera Button
 - Developed the Flip Camera Logic
-- Added Camera Mode Functionality to the SHutter button
 - Developed BottomScaffold for the gallery button
     - Pictures are arranged in the column of two
 - Changed the background color of the gallery button to dark violet and its icon color to white
 - Changed the background color of the flip camera button to dark violet and its icon color to white
+- Added Camera Mode and Video Mode Functionality to the Shutter button
+- Created ic_shutter XML file for Shutter Button
 - Added Purple Aura to the shutter button
-    - Button has white color when photo mode is clicked
-    - Button has red color when video mode is clicked
+- Added Logic for changing the shutter button respective to modes
+    - Button has IR as ic_shutter and tint as White in Photo Mode
+    - Button has IR as ic_shutter and tint as Red in Video Mode (when it is not recording)
+    - Button has IR as ic_stop_shutter and tint as Purple in Video Mode (when it is recording)
+        - Added ic_stop_shutter XML file for this
 - Added functionality to the shutter button when video is enabled
 - In Photo Mode, the images can be viewed only by the gallery option provided
-- In Video Mode, the videos can be viewd only by the media gallery
+- In Video Mode, the videos can be viewed only by the media gallery
 - Added Four Buttons on the top with translucent white box
 - Added Information button with transparent bg and dark violet icon
 - Added a Screen for the Information Button
@@ -82,7 +83,7 @@ Additional Tasks:
 - Face Smile Detection model
 - Twitching Hands Model 
 - How to use those codes in Kotlin
-- How to link the app with gallery (so that it doesnt get removed everytime i close my app) [able to see photos in gallery]
+- How to link the app with gallery (so that it doesn't get removed everytime i close my app) [able to see photos in gallery]
 - To able to click the photos and videos (in the gallery)
 - Functionality given to the Gallery App
 - Swiping right and left to access filters (from any mode)
