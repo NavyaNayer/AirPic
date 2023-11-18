@@ -316,7 +316,7 @@ private fun CameraContent(navController: NavController?) {
                     )
                 }
 
-                Button (
+                Button(
                     onClick = {
                         isTorchOn = !isTorchOn
                         if (isTorchOn) controller.enableTorch(true)
@@ -337,10 +337,10 @@ private fun CameraContent(navController: NavController?) {
                     )
                 }
 
-                Button (
+                Button(
                     onClick = {
                         timerState = (timerState + 1) % 3
-                        timerValue = when(timerState) {
+                        timerValue = when (timerState) {
                             0 -> 0
                             1 -> 3
                             2 -> 10
@@ -369,7 +369,7 @@ private fun CameraContent(navController: NavController?) {
                     )
                 }
 
-                Button (
+                Button(
                     onClick = {
                         isGestureOn = !isGestureOn
                     },
