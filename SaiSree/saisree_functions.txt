@@ -1,6 +1,0 @@
-Sai Sree's File
-Hand Detection
-July: Learning and Research
-August: Implentation
-September: Testing
-October and November: Optimization
